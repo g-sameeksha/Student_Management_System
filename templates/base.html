@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static '/dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '/vars.css'%}" >
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Toastify/1.12.0/Toastify.min.css" />
+
+    {% block custom_css %}
+
+    {% endblock %}
+
+</head>
+<body >
+    <!-- var(--variable-name) -->
+    <nav class="nav navbar w-100 p-2 justify-content-between " style=" color:var(--primarytext);background-color:var(--primarycolor)">
+        navbar
+    </nav>
+
+    {% block content %}
+
+    {% endblock %}
+
+    <script src="{% static '/dist/js/bootstrap.min.js' %}"></script>
+
+    {% block custom_js %}
+
+    {% endblock %}
+    <script src="{% static '/custom/custom.js' %}"></script>
+
+</body>
+</html>

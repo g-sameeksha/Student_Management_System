@@ -1,0 +1,19 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block title %}ALl Staff{% endblock %}
+
+{% block content %}
+
+<div style="background-color: var(--secondarycolor);">
+    {% for staff in staffs %}
+<p>{{staff.admin.username}}</p>
+        {% for course in courses %}
+        <p>{{courses[staff]}}</p>
+
+
+        {% endfor %}
+
+
+{% endfor %}
+</div>
+{% endblock %}

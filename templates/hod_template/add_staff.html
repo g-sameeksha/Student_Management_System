@@ -1,0 +1,23 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block title %}Add Staff{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center"><i class="fas fa-user-plus"></i> Add Staff</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} text-center">
+            {{ message }}
+        </div>        
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url 'add_staff' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-save"></i> Add Staff</button>
+    </form>
+</div>
+{% endblock %}

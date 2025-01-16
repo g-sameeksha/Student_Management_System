@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>heome</h1>
+{% if user.is_authenticated %}
+<h1>Welcome {{user.username}}</h1>
+<a href="{% url 'logout_user' %}"><button>Logout</button></a>
+{% else %}
+<a href="{% url 'login_user' %}"><button>Login</button></a>
+{% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,122 @@
+<aside class="app-sidebar bg-body-secondary shadow " data-bs-theme="dark">
+  <!-- Sidebar Brand -->
+  <div class="sidebar-brand">
+    <a href="./index.html" class="brand-link">
+      <img src="" alt="AdminLTE Logo" class="brand-image opacity-75 shadow">
+      <span class="brand-text fw-light">Admin Panel</span>
+    </a>
+  </div>
+
+  <!-- Sidebar Wrapper -->
+  <div class="sidebar-wrapper" data-overlayscrollbars="host">
+    <nav class="mt-2">
+      <!-- Sidebar Menu -->
+      <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
+        <!-- Add Staff -->
+        <li class="nav-item">
+          <a href="{% url 'add_staff' %}" class="nav-link">
+            <i class="nav-icon bi bi-person-plus-fill"></i>
+            <p>Add Staff</p>
+          </a>
+        </li>
+
+        <!-- Manage Staff -->
+        <li class="nav-item">
+          <a href="{% url 'manage_staff' %}" class="nav-link">
+            <i class="nav-icon bi bi-person-lines-fill"></i>
+            <p>Manage Staff</p>
+          </a>
+        </li>
+
+        <!-- Add Student -->
+        <li class="nav-item">
+          <a href="{% url 'add_student' %}" class="nav-link">
+            <i class="nav-icon bi bi-person-plus-fill"></i>
+            <p>Add Student</p>
+          </a>
+        </li>
+
+        <!-- Manage Student -->
+        <li class="nav-item">
+          <a href="{% url 'manage_course' %}" class="nav-link">
+            <i class="nav-icon bi bi-person-lines-fill"></i>
+            <p>Manage Student</p>
+          </a>
+        </li>
+
+        <!-- Add Course -->
+        <li class="nav-item">
+          <a href="{% url 'add_course' %}" class="nav-link">
+            <i class="nav-icon bi bi-bookmark-plus-fill"></i>
+            <p>Add Course</p>
+          </a>
+        </li>
+
+        <!-- Manage Course -->
+        <li class="nav-item">
+          <a href="{% url 'manage_course' %}" class="nav-link">
+            <i class="nav-icon bi bi-bookmark-check-fill"></i>
+            <p>Manage Course</p>
+          </a>
+        </li>
+
+        <!-- Add Subject -->
+        <li class="nav-item">
+          <a href="{% url 'add_subject' %}" class="nav-link">
+            <i class="nav-icon bi bi-file-earmark-plus-fill"></i>
+            <p>Add Subject</p>
+          </a>
+        </li>
+
+        <!-- Manage Subject -->
+        <li class="nav-item">
+          <a href="{% url 'add_course' %}" class="nav-link">
+            <i class="nav-icon bi bi-file-earmark-check-fill"></i>
+            <p>Manage Subject</p>
+          </a>
+        </li>
+
+        <!-- View Attendance Report -->
+        <li class="nav-item">
+          <a href="{% url 'add_course' %}" class="nav-link">
+            <i class="nav-icon bi bi-file-earmark-earphones-fill"></i>
+            <p>View Attendance Report</p>
+          </a>
+        </li>
+
+        <!-- Student Feedback -->
+        <li class="nav-item">
+          <a href="./student-feedback.html" class="nav-link">
+            <i class="nav-icon bi bi-chat-left-text-fill"></i>
+            <p>Student Feedback</p>
+          </a>
+        </li>
+
+        <!-- Staff Feedback -->
+        <li class="nav-item">
+          <a href="./staff-feedback.html" class="nav-link">
+            <i class="nav-icon bi bi-chat-left-text-fill"></i>
+            <p>Staff Feedback</p>
+          </a>
+        </li>
+
+        <!-- Student Leave -->
+        <li class="nav-item">
+          <a href="./student-leave.html" class="nav-link">
+            <i class="nav-icon bi bi-person-x-fill"></i>
+            <p>Student Leave</p>
+          </a>
+        </li>
+
+        <!-- Staff Leave -->
+        <li class="nav-item">
+          <a href="./staff-leave.html" class="nav-link">
+            <i class="nav-icon bi bi-person-x-fill"></i>
+            <p>Staff Leave</p>
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+  </div>
+</aside>

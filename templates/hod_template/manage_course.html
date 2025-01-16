@@ -1,0 +1,16 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block title %}ALl Staff{% endblock %}
+
+{% block content %}
+
+<div class="container card" style="background-color: var(--secondarycolor);">
+        {% for course in courses %}
+        <div class="row  border-bottom mb-2">
+            <p class="my-2 mx-auto">{{course.course_name}}</p>
+
+        </div>
+
+        {% endfor %}
+</div>
+{% endblock %}

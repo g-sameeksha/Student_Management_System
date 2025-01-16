@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My App{% endblock %}</title>
+    <link rel="stylesheet" href="{% static '/dist/css/bootstrap.min.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static '/vars.css'%}">
+    <link rel="stylesheet" href="{% static '/custom/custom.css'%}">
+<!-- Flatpickr CSS -->
+<link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Toastify/1.12.0/Toastify.min.css" />
+    <!-- Add other necessary includes like CSS, JS, etc. -->
+</head>
+<body>
+    <!-- Include Navbar -->
+    {% include 'hod_template/navbar.html' %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-4">
+                {% include 'hod_template/sidebar.html' %}
+            </div>
+            <!-- Content Section -->
+            <div class="col-8 ">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src ="{% static 'custom/custom.js' %}"></script>
+    <!-- Include any footer or additional global content -->
+</body>
+</html>
