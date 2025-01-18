@@ -5,5 +5,5 @@ from .models import Staff,Course
 
 
 def staff_home(request):
-    return render(request,"hod_template/base_template.html")
+    return render(request,"staff_template/staff_home.html")
 

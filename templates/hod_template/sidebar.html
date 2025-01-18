@@ -14,7 +14,8 @@
       <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
         <!-- Add Staff -->
         <li class="nav-item">
-          <a href="{% url 'add_staff' %}" class="nav-link">
+          {% url 'add_staff' as add_staff %}
+          <a href="{{add_staff }}" class="nav-link {% if request.path == add_staff %} active  {% endif %}">
             <i class="nav-icon bi bi-person-plus-fill"></i>
             <p>Add Staff</p>
           </a>
@@ -22,15 +23,17 @@
 
         <!-- Manage Staff -->
         <li class="nav-item">
-          <a href="{% url 'manage_staff' %}" class="nav-link">
+          {% url 'manage_staff' as manage_staff %}
+          <a href="{{manage_staff}}" class="nav-link {% if request.path == manage_staff %} active  {% endif %}">
             <i class="nav-icon bi bi-person-lines-fill"></i>
             <p>Manage Staff</p>
           </a>
         </li>
 
         <!-- Add Student -->
-        <li class="nav-item">
-          <a href="{% url 'add_student' %}" class="nav-link">
+        <li class="nav-item"> 
+          {% url 'add_student' as add_student %}
+          <a href="{{add_student}}"  class="nav-link {% if request.path == add_student %} active  {% endif %}">
             <i class="nav-icon bi bi-person-plus-fill"></i>
             <p>Add Student</p>
           </a>
@@ -38,7 +41,8 @@
 
         <!-- Manage Student -->
         <li class="nav-item">
-          <a href="{% url 'manage_course' %}" class="nav-link">
+          {% url 'manage_student' as manage_student %}
+          <a href="manage_student" class="nav-link {% if request.path == manage_student %} active  {% endif %}">
             <i class="nav-icon bi bi-person-lines-fill"></i>
             <p>Manage Student</p>
           </a>
@@ -70,7 +74,7 @@
 
         <!-- Manage Subject -->
         <li class="nav-item">
-          <a href="{% url 'add_course' %}" class="nav-link">
+          <a href="{% url 'manage_subject' %}" class="nav-link">
             <i class="nav-icon bi bi-file-earmark-check-fill"></i>
             <p>Manage Subject</p>
           </a>

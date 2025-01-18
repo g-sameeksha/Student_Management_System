@@ -1,0 +1,63 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block title %}Add Course{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center"><i class="fas fa-book"></i> Add Course</h2>
+    
+    <!-- Display Messages -->
+    {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <form method="POST" action="{% url 'edit_subject' subject.id %}">
+        {% csrf_token %}
+
+        <!-- Render form fields manually for custom error handling -->
+        <div class="mb-3">
+            <label for="id_course_name" class="form-label">Course Name</label>
+
+            <div class="mb-3">
+                <label for="id_name" class="form-label">Subject Name:</label>
+                <input type="text"  name="subject_name" id="id_name" class="form-control" placeholder="Enter Username" value = {{subject.subject_name}} required  >
+                
+            </div>
+    
+            <p>
+                <label for="id_course_id">Course:</label>
+                {{ subject.course_id.course_name}}
+                <select name="course_id" class="form-control form-select" required id="id_course_id" value={{subject.course_id.course_name}}>
+              {% for course in courses  %}
+              <option value={{course.id}} {% if subject.course_id.course_name == course.course_name %} selected{% endif %}>{{course.course_name}}</option>
+              {% endfor %}
+            
+            </select>
+            </p>
+    
+          
+    
+            <p>
+                <label for="id_staff_id">Course:</label>
+                {{ subject.staff_id.admin.username}}
+                <select name="staff_id" class="form-control form-control" required id="id_staff_id" value={{subject.staff_id.admin.username}}>
+              {% for staff in staffs  %}
+              <option value={{staff.id}} {% if subject.staff_id.admin.username == staff.admin.username %} selected{% endif %}>{{staff.admin.username}}</option>
+              {% endfor %}
+            
+            </select>
+            </p>
+    
+            
+        </div>
+        
+        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-save"></i> Add Course</button>
+    </form>
+</div>
+{% endblock %}

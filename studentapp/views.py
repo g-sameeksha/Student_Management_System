@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect ,HttpResponse
 from .HODviews import admin_home
+
 User = get_user_model() 
 
 # Create your views here.

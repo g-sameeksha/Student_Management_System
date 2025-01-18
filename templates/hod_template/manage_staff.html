@@ -1,19 +1,59 @@
 {% extends 'hod_template/base_template.html' %}
 
-{% block title %}ALl Staff{% endblock %}
+{% block title %}All Staff{% endblock %}
 
 {% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Staff Details</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Staff id</th>
+                    <th>Username</th>
+                    <Th>Email Address</Th>
+                    <th>Full Name</th>
+                    <th>Last Login</th>
+                    <th>date Joined</th>
+                    <th>Address</th>
+                    <th>Courses</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
 
-<div style="background-color: var(--secondarycolor);">
-    {% for staff in staffs %}
-<p>{{staff.admin.username}}</p>
-        {% for course in courses %}
-        <p>{{courses[staff]}}</p>
+                {% for staff, subjects in staff_courses.items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>({{ staff.id }})</td>
+                    <td>{{ staff.admin.username }} </td>
+                    <td>{{staff.admin.email}}</td>
+                    <td>{{ staff.admin.first_name }} {{ staff.admin.last_name }}</td>
+                    <td>{{staff.admin.last_login}}</td>
+                    <td>{{staff.admin.date_joined}}</td>
 
-
-        {% endfor %}
-
-
-{% endfor %}
+                    <td>{{ staff.address }}</td>
+                    <td>
+                        {% if subjects %}
+                            {% for subject in subjects %}
+                                <span class="badge bg-secondary">{{ subject.subject_name }} : {{ subject.course_id.course_name }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-muted">No subjects assigned</span>
+                        {% endif %}
+                    </td>
+                    <td><a  href="{% url 'edit_user' staff.admin.id staff.admin.user_type %}" class="btn btn-warning"><i class=" nav-icon edit"></i>Edit</a></td>
+                </tr>
+              
+               
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No staff members found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

@@ -1,0 +1,63 @@
+<aside class="app-sidebar bg-body-secondary shadow vh-100" data-bs-theme="dark">
+  <!-- Sidebar Brand -->
+  <div class="sidebar-brand">
+    <a href="./index.html" class="brand-link">
+      <img src="" alt="AdminLTE Logo" class="brand-image opacity-75 shadow">
+      <span class="brand-text fw-light">Admin Panel</span>
+    </a>
+  </div>
+
+  <!-- Sidebar Wrapper -->
+  <div class="sidebar-wrapper " data-overlayscrollbars="host">
+    <nav class="mt-2">
+      <!-- Sidebar Menu -->
+      <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
+
+        <li class="nav-item"> 
+          {% url 'staff_home' as staff_home %}
+          <a href="{{staff_home}}"  class="nav-link {% if request.path == staff_home %} active  {% endif %}">
+            <i class="nav-icon bi bi-person-plus-fill"></i>
+            <p>Staff Home</p>
+          </a>
+        </li>
+
+  
+
+       
+
+        <!-- Student Feedback -->
+        <li class="nav-item">
+          <a href="./student-feedback.html" class="nav-link">
+            <i class="nav-icon bi bi-chat-left-text-fill"></i>
+            <p>Student Feedback</p>
+          </a>
+        </li>
+
+        <!-- Staff Feedback -->
+        <li class="nav-item">
+          <a href="./staff-feedback.html" class="nav-link">
+            <i class="nav-icon bi bi-chat-left-text-fill"></i>
+            <p>Staff Feedback</p>
+          </a>
+        </li>
+
+        <!-- Student Leave -->
+        <li class="nav-item">
+          <a href="./student-leave.html" class="nav-link">
+            <i class="nav-icon bi bi-person-x-fill"></i>
+            <p>Student Leave</p>
+          </a>
+        </li>
+
+        <!-- Staff Leave -->
+        <li class="nav-item">
+          <a href="./staff-leave.html" class="nav-link">
+            <i class="nav-icon bi bi-person-x-fill"></i>
+            <p>Staff Leave</p>
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+  </div>
+</aside>

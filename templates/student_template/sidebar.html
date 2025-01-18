@@ -1,0 +1,47 @@
+<aside class="app-sidebar bg-body-secondary shadow vh-100 " data-bs-theme="dark">
+  <!-- Sidebar Brand -->
+  <div class="sidebar-brand">
+    <a href="./index.html" class="brand-link">
+      <img src="" alt="AdminLTE Logo" class="brand-image opacity-75 shadow">
+      <span class="brand-text fw-light">Admin Panel</span>
+    </a>
+  </div>
+
+  <!-- Sidebar Wrapper -->
+  <div class="sidebar-wrapper" data-overlayscrollbars="host">
+    <nav class="mt-2">
+      <!-- Sidebar Menu -->
+      <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
+        <!-- Add Staff -->
+        <li class="nav-item">
+          {% url 'student_home' as student_home %}
+          <a href="{{student_home }}" class="nav-link {% if request.path == student_home %} active  {% endif %}">
+            <i class="nav-icon bi bi-person-plus-fill"></i>
+            <p>student_home</p>
+          </a>
+        </li>
+
+        <!-- Manage Staff -->
+        <li class="nav-item">
+          {% url 'manage_staff' as manage_staff %}
+          <a href="{{manage_staff}}" class="nav-link {% if request.path == manage_staff %} active  {% endif %}">
+            <i class="nav-icon bi bi-person-lines-fill"></i>
+            <p>Manage Staff</p>
+          </a>
+        </li>
+
+        <!-- Add Student -->
+        <li class="nav-item"> 
+          {% url 'add_student' as add_student %}
+          <a href="{{add_student}}"  class="nav-link {% if request.path == add_student %} active  {% endif %}">
+            <i class="nav-icon bi bi-person-plus-fill"></i>
+            <p>Add Student</p>
+          </a>
+        </li>
+
+    
+
+      </ul>
+    </nav>
+  </div>
+</aside>

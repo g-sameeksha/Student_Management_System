@@ -1,0 +1,64 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block title %}All Staff{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Staff Details</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Student id</th>
+                    <th>Username</th>
+                    <Th>Email Address</Th>
+                    <th>Full Name</th>
+                    <th>Gender</th>
+                    <th>date Joined</th>
+                    <th>Address</th>
+                    <th>profile pic</th>
+                    <th>Courses</th>
+                    <th>Academic year</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for student in students%}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>({{ student.id }})</td>
+                    <td>{{ student.admin.username }} </td>
+                    <td>{{student.admin.email}}</td>
+                    <td>{{ student.admin.first_name }} {{ student.admin.last_name }}</td>
+                    <td>{{student.gender}}</td>
+                    <td>{{student.admin.date_joined}}</td>
+                    <td>{{ student.address }}</td>
+                    <td>            <img src="{{student.profile_pic }}" class=" border rounded" style="width:60px;height: 60px; object-fit: cover;">
+                    </td>
+                    <td>
+                        {% if student.course_id %}
+                           
+                                <span class="badge bg-secondary">{{ student.course_id.course_name }} </span>
+                    
+                        {% else %}
+                            <span class="text-muted">No Courses Admitted</span>
+                        {% endif %}
+                    </td>
+                    <td>{{student.academic_start_year}} - {{student.academic_end_year}}</td>
+                    <td><a  href="{% url 'edit_user' student.admin.id student.admin.user_type %}" class="btn btn-warning"><i class=" nav-icon edit"></i>Edit</a></td>
+
+                </tr>
+              
+               
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No staff members found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
