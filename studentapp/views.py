@@ -57,4 +57,4 @@ def GetUserDetails(request):
     
 def logout_user(request):
     logout(request)
-    return HttpResponseRedirect("/home")
+    return HttpResponseRedirect("/")

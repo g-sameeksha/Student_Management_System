@@ -16,6 +16,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Toastify/1.12.0/Toastify.min.css" />
     <!-- Add other necessary includes like CSS, JS, etc. -->
 
+     <!-- Jquery library -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
     <style>
         .active{
             background-color: white;
@@ -42,7 +46,10 @@
     </div>
 <!-- Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src ="{% static 'custom/custom.js' %}"></script>
+
+<!-- <script src ="{% static 'custom/custom.js' %}"></script> -->
     <!-- Include any footer or additional global content -->
+     {% block custom_js %}
+     {% endblock custom_js %}
 </body>
 </html>

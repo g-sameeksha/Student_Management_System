@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from .forms import StaffForm,CourseForm,StudentForm,SubjectForm
 from django.contrib import messages
-from .models import Staff,Course,Subject,Student,CustomUser
+from .models import Staff,Course,Subject,Student,CustomUser,SessionYear
 from django.http import HttpResponseRedirect ,HttpResponse
 from django.core.files.storage import FileSystemStorage
 
@@ -14,7 +14,8 @@ def add_staff(request):
         form = StaffForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('admin_home')  # Update to your desired URL
+            messages.success(request,"Staff added successfully")
+            return redirect('add_staff')  # Update to your desired URL
         else:
             messages.error(request, 'Error adding staff member. Please check the form.')
     else:
@@ -121,31 +122,26 @@ def manage_student(request):
     return render(request,"hod_template/manage_student.html",{"students":students})
 
 
-
-
 def edit_user(request,id,user_type):
-    user = CustomUser.objects.get(id=id,user_type=user_type)
+    try:
+        user = CustomUser.objects.get(id=id,user_type=user_type)
+    except:
+        return redirect("admin_home")
     courses = Course.objects.all()
     if user_type=="Student":
         student = Student.objects.get(admin=user)
         user_address=student.address
         user_profile_pic = student.profile_pic
         user_gender = student.gender
-        user_academic_start_year = student.academic_start_year
-        user_academic_end_year = student.academic_end_year
+        user_academic_start_year = student.session_year_id.academic_start_year
+        user_academic_end_year = student.session_year_id.academic_end_year
         user_course_name = student.course_id.course_name
         user_type="Student"
     elif user_type == "Staff":
         staff = Staff.objects.get(admin=user)
         user_address=staff.address
         user_type="Staff"
-      
-
-
-    # print(staff?staff:"null")
-    # print(student?student:"null")
-
-
+ 
     if user_type == "Student":
          student_data ={
             "profile_pic" : user_profile_pic,
@@ -154,11 +150,8 @@ def edit_user(request,id,user_type):
             "academic_end_year": user_academic_end_year,
             "course_name":user_course_name}
     else:
-        student =None
-    
+        student_data =None
 
-    
-    # print(student)
     if request.method =="POST":
         user.username= request.POST.get("username")
         # user.password = request.POST.get("password")
@@ -172,28 +165,21 @@ def edit_user(request,id,user_type):
             fs= FileSystemStorage()
             filename = fs.save(profile_pic.name,profile_pic)
             student.profile_pic = fs.url(filename)
-           
-
+    
             student.gender=request.POST.get("gender")
-            student.academic_start_year=request.POST.get("academic_start_year")
-            student.academic_end_year=request.POST.get("academic_end_year")
+            student.session_year_id.academic_start_year=request.POST.get("academic_start_year")
+            student.session_year_id.academic_end_year=request.POST.get("academic_end_year")
             student.course_id = Course.objects.get(id = request.POST.get("course_id"))
             student.save()
+            messages.success(request,f"{user.username} details saved successfully")
+            return redirect(f"/edit_user/{id}/{user_type}")
         elif user_type == "Staff":
             staff.address=request.POST.get("address")    
             staff.save()
 
 
-        # print(staff)
-        # print(student)
-        print("*****************")
-        print(user)
-      
-
         messages.success(request,f"{user.username} details saved successfully")
         return redirect(f"/edit_user/{id}/{user_type}")
-
-   
     return render(request,"hod_template/edit_user.html",{"user":user,"courses":courses,"user_address":user_address,"user_type":user_type,"student":student_data})
 
 
@@ -226,3 +212,27 @@ def edit_course(request,id):
     
     return render(request,"hod_template/edit_course.html",{"course":course})
     
+
+def add_session(request):
+    if request.method == "POST":
+        try:
+            sessionYear = SessionYear(
+                academic_start_year= request.POST.get("academic_start_year"),
+                academic_end_year=request.POST.get("academic_end_year")
+            )
+            sessionYear.save()
+            messages.success(request,"Successfully added session")
+            return redirect("add_session")
+        except Exception as e:
+            messages.error(request,"failed to add ")
+            print(e)
+            return redirect("add_session")
+
+
+    
+            
+
+    return render(request,"hod_template/add_session_year.html")
+    
+def manage_session(request):
+    pass

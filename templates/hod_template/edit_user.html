@@ -17,6 +17,7 @@
         {% endfor %}
     {% endif %}
     <form method="POST" action="{% url 'edit_user' user.id user.user_type %}" enctype="multipart/form-data" >
+      {{user.id}}
         {% csrf_token %}
         <div class="mb-3">
             <label for="id_username" class="form-label">Username:</label>

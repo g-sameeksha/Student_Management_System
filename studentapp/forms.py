@@ -104,25 +104,12 @@ class StudentForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, required=True)
     first_name = forms.CharField(max_length=255, required=True)
     last_name = forms.CharField(max_length=255, required=True)
+   
 
     class Meta:
         model = Student
-        fields = ['gender', 'profile_pic', 'address', 'course_id', 'academic_start_year', 'academic_end_year']
+        fields = ['gender', 'profile_pic', 'address', 'course_id',"session_year_id"]
         widgets = {
-            'academic_start_year': DateInput(
-                attrs={
-                    'type':'date',
-                    'class': 'form-control date-picker',
-                    'placeholder': 'Select Start Date',
-                }
-            ),
-            'academic_end_year': DateInput(
-                attrs={
-                    'type':'date',
-                    'class': 'form-control date-picker',
-                    'placeholder': 'Select End Date',
-                }
-            ),
             'gender': forms.Select(attrs={'class': 'form-control'}),
             'profile_pic': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),

@@ -20,42 +20,25 @@
             <p>Staff Home</p>
           </a>
         </li>
-
+        <li class="nav-item"> 
+          {% url 'staff_take_attendence' as staff_take_attendence %}
+          <a href="{{staff_take_attendence}}"  class="nav-link {% if request.path == staff_take_attendence %} active  {% endif %}">
+            <i class="nav-icon bi bi-person-plus-fill"></i>
+            <p>Staff take_attendence</p>
+          </a>
+        </li>
+        <li class="nav-item"> 
+          {% url 'staff_update_attendence' as staff_update_attendence %}
+          <a href="{{staff_update_attendence}}"  class="nav-link {% if request.path == staff_update_attendence %} active  {% endif %}">
+            <i class="nav-icon bi bi-person-plus-fill"></i>
+            <p>Staff update_attendence</p>
+          </a>
+        </li>
   
 
        
 
-        <!-- Student Feedback -->
-        <li class="nav-item">
-          <a href="./student-feedback.html" class="nav-link">
-            <i class="nav-icon bi bi-chat-left-text-fill"></i>
-            <p>Student Feedback</p>
-          </a>
-        </li>
-
-        <!-- Staff Feedback -->
-        <li class="nav-item">
-          <a href="./staff-feedback.html" class="nav-link">
-            <i class="nav-icon bi bi-chat-left-text-fill"></i>
-            <p>Staff Feedback</p>
-          </a>
-        </li>
-
-        <!-- Student Leave -->
-        <li class="nav-item">
-          <a href="./student-leave.html" class="nav-link">
-            <i class="nav-icon bi bi-person-x-fill"></i>
-            <p>Student Leave</p>
-          </a>
-        </li>
-
-        <!-- Staff Leave -->
-        <li class="nav-item">
-          <a href="./staff-leave.html" class="nav-link">
-            <i class="nav-icon bi bi-person-x-fill"></i>
-            <p>Staff Leave</p>
-          </a>
-        </li>
+       
 
       </ul>
     </nav>

@@ -46,7 +46,7 @@
                             <span class="text-muted">No Courses Admitted</span>
                         {% endif %}
                     </td>
-                    <td>{{student.academic_start_year}} - {{student.academic_end_year}}</td>
+                    <td>{{student.session_year_id.academic_start_year}} - {{student.session_year_id.academic_end_year}}</td>
                     <td><a  href="{% url 'edit_user' student.admin.id student.admin.user_type %}" class="btn btn-warning"><i class=" nav-icon edit"></i>Edit</a></td>
 
                 </tr>

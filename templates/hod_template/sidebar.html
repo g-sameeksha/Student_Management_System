@@ -80,6 +80,21 @@
           </a>
         </li>
 
+        <li class="nav-item">
+          {% url 'manage_session' as manage_session %}
+          <a href="manage_session" class="nav-link {% if request.path == manage_session %} active  {% endif %}">
+            <i class="nav-icon bi bi-person-lines-fill"></i>
+            <p>Manage Session</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          {% url 'add_session' as add_session %}
+          <a href="add_session" class="nav-link {% if request.path == add_session %} active  {% endif %}">
+            <i class="nav-icon bi bi-person-lines-fill"></i>
+            <p>add session</p>
+          </a>
+        </li>
+
         <!-- View Attendance Report -->
         <li class="nav-item">
           <a href="{% url 'add_course' %}" class="nav-link">

@@ -58,6 +58,17 @@ class Subject(models.Model):
 
     def __str__(self):
         return f"{self.subject_name} : {self.course_id.course_name}"
+    
+class SessionYear(models.Model):
+    id = models.AutoField(primary_key=True)
+    academic_start_year = models.DateField()
+    academic_end_year = models.DateField()
+    objects=models.Manager()
+
+
+    def __str__(self):
+        return f"{self.academic_start_year} - { self.academic_end_year}"
+
    
 
 class Student(models.Model):
@@ -73,8 +84,7 @@ class Student(models.Model):
     profile_pic = models.FileField()
     address = models.TextField()
     course_id = models.ForeignKey(Course,on_delete=models.DO_NOTHING)
-    academic_start_year = models.DateField()
-    academic_end_year = models.DateField()
+    session_year_id = models.ForeignKey(SessionYear,on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects=models.Manager()
@@ -83,7 +93,8 @@ class Student(models.Model):
 class Attendence(models.Model):
     id = models.AutoField(primary_key=True)
     subject_id = models.ForeignKey(Subject,on_delete=models.DO_NOTHING)
-    attendence_date = models.DateTimeField(auto_now_add=True)
+    attendence_date = models.DateField(auto_now_add=True)
+    session_year_id = models.ForeignKey(SessionYear,on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects=models.Manager()
@@ -92,7 +103,7 @@ class Attendence(models.Model):
 class AttendenceReport(models.Model):
     id = models.AutoField(primary_key=True)
     student_id = models.ForeignKey(Student,on_delete=models.DO_NOTHING)
-    attendence_id = models.ForeignKey(Subject,on_delete=models.CASCADE)
+    attendence_id = models.ForeignKey(Attendence,on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True) 
@@ -168,9 +179,9 @@ def create_user_profile(sender,instance,created,**kwargs):
         if instance.user_type == "HOD":
             AdminHOD.objects.create(admin=instance)
         if instance.user_type == "STAFF":
-            Staff.objects.create(admin=instance)
+            Staff.objects.create(admin=instance,address="")
         if instance.user_type == "STUDENT":
-            Student.objects.create(admin=instance)
+            Student.objects.create(admin=instance,course_id=Course.objects.get(id=1),session_year_id = SessionYear.objects.get(id=1))
 
 @receiver(post_save,sender =CustomUser)
 def save_user_profile(sender,instance,**kwargs):

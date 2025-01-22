@@ -1,0 +1,44 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block title %}Add Course{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center"><i class="fas fa-book"></i> Add Session year</h2>
+    
+    <!-- Display Messages -->
+    {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <form method="POST" action="{% url 'add_session' %}">
+        {% csrf_token %}
+
+        <!-- Render form fields manually for custom error handling -->
+        <div class="mb-3">
+
+            <div class="mb-3">
+                <label for="id_name" class="form-label">Session start year:</label>
+                <input type="date"  name="academic_start_year" id="id_name" class="form-control date-picker" required  >
+                
+            </div>
+            <div class="mb-3">
+                <label for="id_name" class="form-label">Session End year:</label>
+                <input type="date"  name="academic_end_year" id="id_name" class="form-control date-picker" required  >
+                
+            </div>
+    
+           
+            
+        </div>
+        
+        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-save"></i> Add Course</button>
+    </form>
+</div>
+{% endblock %}

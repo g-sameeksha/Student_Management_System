@@ -1,0 +1,232 @@
+{% extends 'staff_template/base_template.html' %}
+
+{% block title %}Add Course{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center"><i class="fas fa-book"></i> Take Attendence</h2>
+    
+   
+    {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-body">
+            <div class="form-group my-3">
+                <label>Subject</label>
+                <select class="form-control form-select" name="subject" id ="subject">
+                    {% for subject in subjects %}
+                    <option value="{{subject.id}}">{{subject.subject_name}}</option>
+                    {% endfor %}
+
+                </select>
+
+            </div>
+            <div class="form-group my-3">
+                <label>Session Year</label>
+                <select class="form-control form-select" name="session_year" id ="session_year">
+                    {% for session_year in session_years %}
+                    <option value="{{session_year.id}}">{{session_year.academic_start_year}} to {{session_year.academic_start_year}}</option>
+                    {% endfor %}
+                </select>
+
+            </div>
+           
+            
+            
+            <button type="submit" class="btn btn-primary w-100" id = "fetch_students"> Submit</button>
+            
+        </div>
+       
+    </div>
+
+    <br>
+    <hr>
+    <br>
+    <div class="my-2">
+      
+        <div class="form-group form" id ="students_list">
+
+        </div>
+    </div>
+
+    
+   
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Fetch students when the "Fetch Students" button is clicked
+    document.getElementById("fetch_students").addEventListener("click", function () {
+        var subject = document.getElementById("subject").value;
+        var session_year = document.getElementById("session_year").value;
+
+        // Prepare the data to send
+        var data = new FormData();
+        data.append("subject", subject);
+        data.append("session_year", session_year);
+
+        // Make an AJAX POST request to fetch students
+        fetch("{% url 'get_students' %}", {
+            method: "POST",
+            body: data,
+        })
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json(); // Assuming your backend returns JSON
+        })
+        .then(function (data) {
+            data = JSON.parse(data)
+            console.log(data); 
+            displayStudents(data); // Process and display the students data
+        })
+        .catch(function (error) {
+            console.error("Error in Fetching Students:", error);
+            alert("Error in Fetching Students");
+        });
+    });
+
+    // Add event listener for the "Submit Attendance" button after students are displayed
+    document.getElementById("students_list").addEventListener("click", function (e) {
+        if (e.target && e.target.id === "save_attendence") {
+            saveAttendance();
+        }
+    });
+});
+
+// Function to display students
+function displayStudents(students) {
+    // Get the output container
+    var outputDiv = document.getElementById("students_list");
+
+    // Clear any existing content
+    outputDiv.innerHTML = "";
+
+    outputDiv.innerHTML = `
+        <div class="form-group my-3">
+            <label>Attendance Date</label>
+            <input type="date" class="form-control date-picker" name="attendenece_date" id="attendenece_date">
+        </div>
+    `;
+
+    // Check if the students array is empty or invalid
+    if (students.length === 0) {
+        outputDiv.innerHTML = "<p>No students found or invalid data received.</p>";
+        return;
+    }
+
+    // Create an unordered list element
+    const list = document.createElement("ul");
+
+    // Iterate over each student
+    for (let i = 0; i < students.length; i++) {
+        // Create a list item element
+        const listItem = document.createElement("li");
+        listItem.className = "form-check my-2 border-bottom";
+
+        // Create a label element for the student
+        const label = document.createElement("label");
+        label.textContent = `${students[i].id} > ${students[i].name}`;
+        label.style.marginRight = "10px";
+
+        // Create a checkbox for attendance
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.name = students[i].name; // Group by student name
+        input.value = `${students[i].id} > ${students[i].name}`;
+
+        // Append the label and input to the list item
+        listItem.appendChild(label);
+        listItem.appendChild(input);
+
+        // Append the list item to the list
+        list.appendChild(listItem);
+    }
+
+    // Append the list to the output container
+    outputDiv.appendChild(list);
+
+    // Create and append the "Submit Attendance" button
+    const buttonSubmit = document.createElement("button");
+    buttonSubmit.id = "save_attendence";
+    buttonSubmit.type = 'button';
+    buttonSubmit.innerHTML = "Submit Attendance";
+    buttonSubmit.className = "btn btn-success";
+    outputDiv.appendChild(buttonSubmit);
+}
+function saveAttendance() {
+    var students = document.querySelectorAll("input[type='checkbox']");
+    var attendanceStudentData = [];
+
+    // Loop through each checkbox to check if it's checked
+    students.forEach(function (checkbox) {
+        var studentId = checkbox.value.split(" > ")[0]; // Extract student ID from the value
+        var attendanceStatus = checkbox.checked ? 1 : 0; // Set status to 1 if checked, 0 if unchecked
+
+        // Add the student ID and attendance status to the data array
+        attendanceStudentData.push({
+            student_id: studentId,
+            attendance_status: attendanceStatus
+        });
+    });
+
+    var attendanceDate = document.getElementById("attendenece_date").value;
+    var subjectId = document.getElementById("subject").value;
+    var sessionYearId = document.getElementById("session_year").value;
+
+    // Prepare the data to send
+    var data = {
+        attendance_date: attendanceDate,
+        student_ids: attendanceStudentData,
+        subject_id: subjectId,
+        session_year_id: sessionYearId
+    };
+
+    // Now, attendanceData holds the values of the students marked as present or absent
+    console.log("Attendance Data:", data);
+
+    // Send the data to the server
+    sendAttendanceData(data);
+}
+// Function to send attendance data to the server
+function sendAttendanceData(attendanceData) {
+    var data = new FormData();
+    data.append("attendence_date", attendanceData.attendance_date);
+    // JSON.stringify student_ids before sending
+    data.append("student_ids", JSON.stringify(attendanceData.student_ids));  // Send student IDs as a JSON string
+    data.append("subject_id", attendanceData.subject_id);
+    data.append("session_year_id", attendanceData.session_year_id);
+
+    fetch("{% url 'save_attendance_data' %}", {
+        method: "POST",
+        body: data,
+    })
+    .then(response => response.json())
+    .then(responseData => {
+        console.log("Attendance saved successfully:", responseData);
+        alert("Attendance saved!");
+    })
+    .catch(error => {
+        console.error("Error saving attendance:", error);
+        alert("Error saving attendance");
+    });
+}
+
+
+</script>
+
+
+{% endblock %}
