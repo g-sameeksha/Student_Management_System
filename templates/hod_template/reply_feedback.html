@@ -1,0 +1,25 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block title %}Reply to Feedback{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center"><i class="fas fa-reply"></i> Reply to Feedback</h2>
+    <div class="my-2">
+        <div class="form-container">
+            <h5>Feedback Details:</h5>
+            <p><strong>User:</strong><p>{{feedback.student_id.admin.username}} </p>
+            <p><strong>Message:</strong> {{ feedback.feedback }}</p>
+
+            <form  action= "{% url 'reply_feedback' feedback.id feedback_type %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="feedbackReply">Your Reply</label>
+                    <textarea class="form-control" id="feedbackReply" name="reply" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Reply</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'staff_template/base_template.html' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center"><i class="fas fa-book"></i> Edit Profile</h2>
+    
+    <!-- Display Messages -->
+    {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <form method="POST" action="{% url 'staff_profile' %}">
+        {% csrf_token %}
+
+        <!-- Render form fields manually for custom error handling -->
+        <div class="mb-3">
+
+            <div class="mb-3">
+                <label for="id_name" class="form-label">UserName:</label>
+                <input type="text"  name="username" id="id_name" class="form-control" value="{{ user.username}}" disabled="disabled" >
+                
+            </div>
+            <div class="mb-3">
+                <label for="id_email" class="form-label">Email :</label>
+                <input type="email"  name="email" id="id_email" class="form-control" value="{{user.email}}" disabled="disabled">
+            </div>
+            <div class="mb-3">
+                <label for="id_first_name" class="form-label">First Name :</label>
+                <input type="text"  name="first_name" id="id_first_name" class="form-control" value="{{ user.first_name }}" required >
+            </div>
+            <div class="mb-3">
+                <label for="id_last_name" class="form-label">Last Name:</label>
+                <input type="text"  name="last_name" id="id_last_name" class="form-control" value="{{ user.last_name }}" required >
+            </div>
+            <div class="mb-3">
+                <label for="id_address" class="form-label">Address :</label>
+                <input type="text"  name="address" id="id_address" class="form-control" value="{{ staff.address }}" required >
+            </div>
+
+    
+           
+            
+        </div>
+        
+        <button type="submit" class="btn btn-primary w-100"><i class="fas fa-save"></i> Edit Profile</button>
+    </form>
+</div>
+{% endblock %}

@@ -27,6 +27,7 @@ class Staff(models.Model):
     # name = models.CharField(max_length=255)
     # email = models.CharField(max_length=255)
     # password = models.CharField(max_length=255)
+
     address = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -80,8 +81,7 @@ class Student(models.Model):
     # password = models.CharField(max_length=255)
     # normalizing the models
     gender = models.CharField(max_length=255 ,choices=GENDER)
-
-    profile_pic = models.FileField()
+    profile_pic = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     address = models.TextField()
     course_id = models.ForeignKey(Course,on_delete=models.DO_NOTHING)
     session_year_id = models.ForeignKey(SessionYear,on_delete=models.CASCADE)
@@ -93,7 +93,7 @@ class Student(models.Model):
 class Attendence(models.Model):
     id = models.AutoField(primary_key=True)
     subject_id = models.ForeignKey(Subject,on_delete=models.DO_NOTHING)
-    attendence_date = models.DateField(auto_now_add=True)
+    attendence_date = models.DateField()
     session_year_id = models.ForeignKey(SessionYear,on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -115,7 +115,7 @@ class LeaveReportStudent(models.Model):
     student_id = models.ForeignKey(Student,on_delete=models.CASCADE)
     leave_date = models.CharField(max_length=255)
     leave_message = models.TextField()
-    leave_status = models.BooleanField(default=False)
+    leave_status = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True) 
     objects=models.Manager()
@@ -127,7 +127,7 @@ class LeaveReportStaff(models.Model):
     staff_id = models.ForeignKey(Staff,on_delete=models.CASCADE)
     leave_date = models.CharField(max_length=255)
     leave_message = models.TextField()
-    leave_status = models.BooleanField(default=False)
+    leave_status = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True) 
     objects=models.Manager()
@@ -164,6 +164,18 @@ class NotificationStaff(models.Model):
     id = models.AutoField(primary_key=True)
     staff_id = models.ForeignKey(Staff,on_delete=models.CASCADE)
     message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    objects=models.Manager()
+
+
+
+class StudentResult(models.Model):
+    id = models.AutoField(primary_key=True)
+    student_id = models.ForeignKey(Student,on_delete=models.CASCADE)
+    subject_id = models.ForeignKey(Subject,on_delete=models.CASCADE)
+    exam_marks = models.FloatField(default=0)
+    assignment_marks = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True) 
     objects=models.Manager()

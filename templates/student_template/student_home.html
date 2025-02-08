@@ -2,5 +2,219 @@
 
 
 {% block content %}
-<p>hello</p>
+<div class="row mb-5">
+    <!-- Box 1 -->
+    <div class="col-lg-3 col-6 my-3">
+      <div class="small-box bg-primary text-white p-3 rounded position-relative ">
+        <h3>{{attendence_total}}</h3>
+        <p>Total Attendence</p>
+        <a href="{% url 'student_view_attendence' %}" class="text-light text-decoration-none">
+          More info &nbsp;<i class="bi bi-arrow-right"></i>
+        </a>
+        <i class="bi bi-bar-chart-fill position-absolute opacity-25" style="font-size: 5rem; right: 10px; bottom: 10px;"></i>
+      </div>
+    </div>
+  
+    <!-- Box 2 -->
+    <div class="col-lg-3 col-6 my-3">
+      <div class="small-box bg-success text-white p-3 rounded position-relative">
+        <h3>{{attendence_present}}</h3>
+        <p>Present</p>
+        <a href="{% url 'student_view_attendence' %}" class="text-light text-decoration-none">
+            More info &nbsp;<i class="bi bi-arrow-right"></i>
+        </a>
+        <i class="bi bi-bar-chart-fill position-absolute opacity-25" style="font-size: 5rem; right: 10px; bottom: 10px;"></i>
+      </div>
+    </div>
+  
+    <!-- Box 3 -->
+    <div class="col-lg-3 col-6 my-3">
+      <div class="small-box bg-warning text-dark p-3 rounded position-relative">
+        <h3>{{attendence_absent}}</h3>
+        <p>Absent</p>
+        <a href="{% url 'student_view_attendence' %}" class="text-light text-decoration-none ">
+            More info &nbsp; <i class="bi bi-arrow-right"></i>
+        </a>
+        <i class="bi bi-bar-chart-fill position-absolute opacity-25" style="font-size: 5rem; right: 10px; bottom: 10px;"></i>
+      </div>
+    </div>
+  
+    <!-- Box 4 -->
+    <div class="col-lg-3 col-6 my-3">
+      <div class="small-box bg-danger text-white p-3 rounded position-relative">
+        <h3>{{subjects}}</h3>
+        <p>Total Subjects</p>
+        <a href="#" class="text-light text-decoration-none">
+          More info <i class="bi bi-arrow-right"></i>
+        </a>
+        <i class="bi bi-pie-chart-fill position-absolute opacity-25" style="font-size: 5rem; right: 10px; bottom: 10px;"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body ">
+    <div class="row mt-4">
+        <div class="col-6">
+            <div id="donut-chart"></div>
+        </div>
+        <div class="col-6">
+            <div id="bar-chart"></div>
+
+        </div>
+    </div>
+</div>
+
+  
 {% endblock %}
+
+
+
+
+{% block custom_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var attendance_present = {{ attendence_present | safe }};
+        var attendance_absent = {{ attendence_absent | safe }};
+
+        var pieOptions = {
+            chart: {
+                type: 'donut',
+                height: '300px'
+            },
+            title: {
+            text: 'Attendance Overview', // Add your title here
+            align: 'center', // Options: 'left', 'center', 'right'
+            margin: 20, // Space around the title
+            offsetX: 0, // Horizontal offset
+            offsetY: 0, // Vertical offset
+            style: {
+                fontSize: '20px', // Title font size
+                fontWeight: 'bold', // Title font weight
+                color: '#333' // Title color
+            }
+        },
+            series: [attendance_present, attendance_absent], // Use dynamic data
+            labels: ['PRESENT', 'ABSENT'], // Legend labels
+            colors: ['#20c997', '#f52f57'], // Custom colors
+            responsive: [{
+                breakpoint: 768,
+                options: {
+                    chart: {
+                        width: '100%'
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+        var pieChart = new ApexCharts(document.querySelector("#donut-chart"), pieOptions);
+        pieChart.render();
+
+
+        var subject_names = {{ subject_name | safe }};
+        var data_present = {{ data_present | safe }};
+        var data_absent = {{ data_absent | safe }};
+    
+
+
+        var barOptions = {
+            chart: {
+                type: 'bar',
+                height: '400px',
+            },
+            series: [
+                {
+                    name: 'Present',
+                    data: data_present
+                },
+                {
+                    name: 'Absent',
+                    data: data_absent
+                }
+            ],
+            xaxis: {
+                categories: subject_names
+            },
+            colors: ['#20c997', '#f52f57'],
+            title: {
+                text: 'Attendance Statistics by Subject',
+                align: 'center',
+                style: {
+                    fontSize: '24px',
+                    color: '#333'
+                }
+            },
+            legend: {
+                position: 'top'
+            },
+            responsive: [
+                {
+                    breakpoint: 768,
+                    options: {
+                        chart: {
+                            width: '100%'
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            ]
+        };
+
+        var barChart = new ApexCharts(document.querySelector("#bar-chart"), barOptions);
+        barChart.render();
+
+
+
+
+    //     var attendance_present = {{ attendence_present | safe }};
+    // var attendance_absent = {{ attendence_absent | safe }};
+
+    //     var data = [{
+    //         values: [attendance_present, attendance_absent],
+    //         labels: ['PRESENT', 'ABSENT'],
+    //         marker: {
+    //             colors: ['#20c997', '#d63384']
+    //         },
+    //         type: 'pie',
+    //         hole: 0.4
+    //     }];
+
+    //     var layout = {
+    //         title: {
+    //             text: 'Attendance Overview',
+    //             font: {
+    //                 size: 24,
+    //                 color: '#333',
+    //                 family: 'Arial, sans-serif'
+    //             },
+    //             x: 0.5,
+    //             xanchor: 'center'
+    //         },
+    //         showlegend: true,
+    //         legend: {
+    //             orientation: 'h',
+    //             x: 0.5,
+    //             xanchor: 'center',
+    //             y: -0.2
+    //         },
+    //         margin: { t: 50, b: 50 }
+    //     };
+
+    //     Plotly.newPlot('donut-chart', data, layout);
+    // 
+    });
+
+
+   
+</script>
+
+
+
+
+{% endblock %}
+
+

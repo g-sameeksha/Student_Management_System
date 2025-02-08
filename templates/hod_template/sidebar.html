@@ -1,8 +1,8 @@
 <aside class="app-sidebar bg-body-secondary shadow " data-bs-theme="dark">
   <!-- Sidebar Brand -->
-  <div class="sidebar-brand">
-    <a href="./index.html" class="brand-link">
-      <img src="" alt="AdminLTE Logo" class="brand-image opacity-75 shadow">
+  <div class="sidebar-brand p-4 bg-primary text-center text-white ">
+    <a href="{% url 'admin_profile' %}" class="brand-link text-white ">
+      <!-- <img src="" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> -->
       <span class="brand-text fw-light">Admin Panel</span>
     </a>
   </div>
@@ -12,6 +12,13 @@
     <nav class="mt-2">
       <!-- Sidebar Menu -->
       <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
+        <li class="nav-item">
+          {% url 'admin_home' as admin_home %}
+          <a href="{{admin_home }}" class="nav-link {% if request.path == admin_home %} active  {% endif %}">
+            <i class="nav-icon bi bi-person-plus-fill"></i>
+            <p>admin_home</p>
+          </a>
+        </li>
         <!-- Add Staff -->
         <li class="nav-item">
           {% url 'add_staff' as add_staff %}
@@ -81,13 +88,6 @@
         </li>
 
         <li class="nav-item">
-          {% url 'manage_session' as manage_session %}
-          <a href="manage_session" class="nav-link {% if request.path == manage_session %} active  {% endif %}">
-            <i class="nav-icon bi bi-person-lines-fill"></i>
-            <p>Manage Session</p>
-          </a>
-        </li>
-        <li class="nav-item">
           {% url 'add_session' as add_session %}
           <a href="add_session" class="nav-link {% if request.path == add_session %} active  {% endif %}">
             <i class="nav-icon bi bi-person-lines-fill"></i>
@@ -97,41 +97,47 @@
 
         <!-- View Attendance Report -->
         <li class="nav-item">
-          <a href="{% url 'add_course' %}" class="nav-link">
-            <i class="nav-icon bi bi-file-earmark-earphones-fill"></i>
-            <p>View Attendance Report</p>
+          {% url 'admin_view_attendence' as admin_view_attendence %}
+          <a href="{% url 'admin_view_attendence' %}" class="nav-link {% if request.path == admin_view_attendence and request.GET.feedback_type == 'student' %} active {% endif %}">
+            <i class="nav-icon bi bi-person-lines-fill"></i>
+            <p>admin_view_attendence</p>
           </a>
         </li>
 
-        <!-- Student Feedback -->
-        <li class="nav-item">
-          <a href="./student-feedback.html" class="nav-link">
-            <i class="nav-icon bi bi-chat-left-text-fill"></i>
-            <p>Student Feedback</p>
-          </a>
-        </li>
+            <!-- Student Feedback -->
+      <li class="nav-item">
+        {% url 'feedback_list' as feedback_list %}
+        <a href="{% url 'feedback_list' feedback_type='student' %}" class="nav-link {% if request.path == feedback_list and request.GET.feedback_type == 'student' %} active {% endif %}">
+          <i class="nav-icon bi bi-person-lines-fill"></i>
+          <p>Student Feedback</p>
+        </a>
+      </li>
 
-        <!-- Staff Feedback -->
-        <li class="nav-item">
-          <a href="./staff-feedback.html" class="nav-link">
-            <i class="nav-icon bi bi-chat-left-text-fill"></i>
-            <p>Staff Feedback</p>
-          </a>
-        </li>
+      <!-- Staff Feedback -->
+      <li class="nav-item">
+        {% url 'feedback_list' as feedback_list %}
+        <a href="{% url 'feedback_list' feedback_type='staff' %}" class="nav-link {% if request.path == feedback_list and request.GET.feedback_type == 'staff' %} active {% endif %}">
+          <i class="nav-icon bi bi-person-lines-fill"></i>
+          <p>Staff Feedback</p>
+        </a>
+      </li>
+
 
         <!-- Student Leave -->
         <li class="nav-item">
-          <a href="./student-leave.html" class="nav-link">
-            <i class="nav-icon bi bi-person-x-fill"></i>
-            <p>Student Leave</p>
+          {% url 'student_leave' as student_leave %}
+          <a href="{% url 'leave_reports' 'student' %}" class="nav-link {% if request.path == student_leave  and request.GET.user_type == 'staff' %} active {% endif %}">
+            <i class="nav-icon bi bi-person-lines-fill"></i>
+            <p>student_leave</p>
           </a>
         </li>
 
         <!-- Staff Leave -->
         <li class="nav-item">
-          <a href="./staff-leave.html" class="nav-link">
-            <i class="nav-icon bi bi-person-x-fill"></i>
-            <p>Staff Leave</p>
+          {% url 'staff_leave' as staff_leave %}
+          <a href="{% url 'leave_reports' 'staff' %}" class="nav-link {% if request.path == staff_leave and request.GET.user_type == 'student'  %} active {% endif %}">
+            <i class="nav-icon bi bi-person-lines-fill"></i>
+            <p>staff_leave</p>
           </a>
         </li>
 

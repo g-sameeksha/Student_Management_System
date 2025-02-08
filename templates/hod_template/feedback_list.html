@@ -1,0 +1,52 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block title %}Feedbacks{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center"><i class="fas fa-user-plus"></i> {% if feedback_type == 'student' %} Student {% else %} Staff {% endif %} Feedbacks</h2>
+    <div class="my-2">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        {% if feedback_type == 'student' %} <th>Session</th>{% endif %} 
+                        <th>Message</th>
+                        <th>Sent on</th>
+                        <th>Reply</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for feedback in feedbacks %}
+                    <tr>
+                        <td>{{ feedback.id }}</td>
+                        <!-- Depending on feedback_type, display the appropriate user details -->
+                        {% if feedback_type == 'student' %}
+                            <td>{{ feedback.student_id.id }}</td>
+                            <td>{{ feedback.student_id.admin.first_name }} {{ feedback.student_id.admin.last_name }}</td>
+                            <td>{{ feedback.student_id.session_year_id }}</td>
+                        {% elif feedback_type == 'staff' %}
+                            <td>{{ feedback.staff_id.id }}</td>
+                            <td>{{ feedback.staff_id.admin.first_name }} {{ feedback.staff_id.admin.last_name }}</td>
+                        {% endif %}
+                        <td>{{ feedback.feedback }}</td>
+                        <td>{{feedback.created_at}}</td>
+                        <td>
+                            {% if feedback.feedback_reply == "" %}
+                            <!-- Link to open reply page with feedback details and feedback_type -->
+                            <a href="{% url 'reply_feedback' feedback.id feedback_type %}" class="btn btn-success">Reply</a>
+                            {% else %}
+                            {{ feedback.feedback_reply }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

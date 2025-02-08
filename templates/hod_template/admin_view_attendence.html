@@ -1,0 +1,197 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block title %} View Update Attendance {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center"><i class="fas fa-book"></i>  View Update Attendance </h2>
+    
+   
+    {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-body">
+            <div class="form-group my-3">
+                <label>Subject</label>
+                <select class="form-control form-select" name="subject" id ="subject">
+                    {% for subject in subjects %}
+                    <option value="{{subject.id}}">{{subject.subject_name}}</option>
+                    {% endfor %}
+
+                </select>
+
+            </div>
+            <div class="form-group my-3">
+                <label>Session Year</label>
+                <select class="form-control form-select" name="session_year" id ="session_year">
+                    {% for session_year in session_years %}
+                    <option value="{{session_year.id}}">{{session_year.academic_start_year}} to {{session_year.academic_start_year}}</option>
+                    {% endfor %}
+                </select>
+
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary w-100" id = "fetch_attendence"> Submit</button>
+
+            </div>
+           
+            
+            
+            
+        </div>
+       
+    </div>
+
+    <br>
+    <hr>
+    <br>
+    <div class="my-2">
+      
+        <div class="form-group form" id ="attendence_list">
+            <div class="form-group my-3">
+                <label>Submitted Attendences</label>
+                <select class="form-control form-select" name="attendance_date" id ="attendance_dates">
+                   
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary w-100" id = "show_students"> Submit</button>
+
+            </div>
+            <div class="form-group" id ="students_list">
+
+            </div>
+
+           
+        </div>
+    </div>
+
+    
+   
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("fetch_attendence").addEventListener("click", function () {
+        var subject = document.getElementById("subject").value;
+        var session_year = document.getElementById("session_year").value;
+
+        var data = new FormData();
+        data.append("subject", subject);
+        data.append("session_year_id", session_year);
+
+        fetch("{% url 'admin_get_attendence_dates' %}", {
+            method: "POST",
+            body: data,
+        })
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then(function (data) {
+            data = JSON.parse(data)
+            console.log(data); 
+            displayAttendences(data); 
+        })
+        .catch(function (error) {
+            console.error("Error in Fetching Students:", error);
+            alert("Error in Fetching Students");
+        });
+    });
+
+ 
+
+    document.getElementById("show_students").addEventListener("click",function(e){
+        alert("hello")
+        var attDate = document.getElementById("attendance_dates").value;
+        console.log(attDate)
+
+        var data = new FormData();
+        data.append("attendence_date", attDate);
+
+        fetch("{% url 'admin_get_attendence_students' %}", {
+            method: "POST",
+            body: data,
+        })
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json(); 
+        })
+        .then(function (data) {
+            data = JSON.parse(data)
+            console.log(data); 
+            displayStudents(data); 
+        })
+        .catch(function (error) {
+            console.error("Error in Fetching Students:", error);
+            alert("Error in Fetching Students");
+        });
+
+    })
+});
+
+function displayAttendences(attendances) {
+    var outputDiv = document.getElementById("attendance_dates");
+
+    outputDiv.innerHTML = "";
+
+    if (attendances.length === 0) {
+        outputDiv.innerHTML = "<p>No attendence record found or invalid data received.</p>";
+        return;
+    }
+    for (let i = 0; i < attendances.length; i++) {
+        const listItem = document.createElement("option");
+        listItem.value = `${attendances[i].id}`
+        listItem.innerHTML = `${attendances[i].date } : ${attendances[i].session_year}`
+        
+
+        outputDiv.appendChild(listItem);
+    }
+
+
+}
+function displayStudents(data) {
+    let outputDiv = document.getElementById("students_list");
+
+    outputDiv.innerHTML = "";
+
+    outputDiv.append(document.createElement("br"));
+
+    let list = document.createElement("ul");
+
+ 
+    for (let i = 0; i < data.length; i++) {
+        let listItem = document.createElement("li");
+        listItem.innerHTML = `${data[i].student_id} : ${data[i].student_name} : ${data[i].status == 1 ? "Present" : "Absent"}`;
+
+        list.appendChild(listItem);
+    }
+
+    outputDiv.appendChild(list);
+}
+
+
+
+
+
+
+</script>
+
+
+{% endblock %}

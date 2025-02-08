@@ -1,0 +1,379 @@
+{% extends  'hod_template/base_template.html' %}
+
+
+{% block content %}
+<div class="row m-3">
+    <div class="col-lg-3 col-6 my-3">
+        <div class="small-box bg-primary text-white p-4 rounded position-relative ">
+          <h3>{{students_count}}</h3>
+          <p>Total Students</p>
+          <a href="{% url 'manage_student' %}" class="text-light text-decoration-none">
+            More info &nbsp;<i class="bi bi-arrow-right"></i>
+          </a>
+          <i class="bi bi-bar-chart-fill position-absolute opacity-25" style="font-size: 5rem; right: 10px; bottom: 10px;"></i>
+        </div>
+      </div>
+    
+      <!-- Box 2 -->
+      <div class="col-lg-3 col-6 my-3">
+        <div class="small-box bg-success text-white p-4 rounded position-relative">
+          <h3>{{staffs_count}}</h3>
+          <p>Total Staff</p>
+          <a href="{% url 'manage_staff' %}" class="text-light text-decoration-none">
+              More info &nbsp;<i class="bi bi-arrow-right"></i>
+          </a>
+          <i class="bi bi-bar-chart-fill position-absolute opacity-25" style="font-size: 5rem; right: 10px; bottom: 10px;"></i>
+        </div>
+      </div>
+    
+      <!-- Box 3 -->
+      <div class="col-lg-3 col-6 my-3">
+        <div class="small-box bg-warning text-dark p-4 rounded position-relative">
+          <h3>{{courses_count}}</h3>
+          <p>Total Course</p>
+          <a href="{% url 'manage_course' %}" class="text-light text-decoration-none ">
+              More info &nbsp; <i class="bi bi-arrow-right"></i>
+          </a>
+          <i class="bi bi-bar-chart-fill position-absolute opacity-25" style="font-size: 5rem; right: 10px; bottom: 10px;"></i>
+        </div>
+      </div>
+    
+      <!-- Box 4 -->
+      <div class="col-lg-3 col-6 my-3">
+        <div class="small-box bg-danger text-white p-4 rounded position-relative">
+          <h3>{{subjects_count}}</h3>
+          <p>Total Subjects</p>
+          <a href="{% url 'manage_subject' %}" class="text-light text-decoration-none ">
+            More info &nbsp; <i class="bi bi-arrow-right"></i>
+        </a>
+          <i class="bi bi-pie-chart-fill position-absolute opacity-25" style="font-size: 5rem; right: 10px; bottom: 10px;"></i>
+        </div>
+      </div>
+    </div>
+    <hr> 
+    <div class="card-body ">
+        <div class="row mt-4">
+            <div class="col-lg-6 my-5">
+                <div id="pie-chart1"></div>
+            </div>
+            <div class="col-lg-6 my-5">
+                <div id="donut-chart2"></div>
+    
+            </div>
+            <hr>
+            <div class="col-lg-6 my-5">
+              <div id="donut-chart3"></div>
+  
+            </div>
+            <div class="col-lg-6 my-5">
+            <div id="pie-chart4"></div>
+
+            </div>
+            <hr>
+            <div class="col-lg-6 my-5">
+               <div id="bar-chart5"></div>
+            </div>
+            <div class="col-lg-6 my-5">
+                <div id="bar-chart6"></div>
+            </div>
+     
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+
+<script>
+    document.addEventListener("DOMContentLoaded" , function(){
+      var students_count = {{students_count | safe }};
+      var staffs_count  = {{staffs_count | safe }}
+
+      var pieOptions1  = {
+        chart : {
+          type :"pie",
+          height :"400px"
+
+        },
+        title:{
+          text :"Student v/s Staff",
+          align: 'center',
+            margin: 20, 
+            offsetX: 0, 
+            offsetY: 0, 
+            style: {
+                fontSize: '20px', 
+                fontWeight: 'bold', 
+                color: '#333'
+            }
+        },
+        series : [students_count,staffs_count],
+        labels: ['STUDENT', 'STAFF'],
+        colors: ['#20c997', '#f52f57'], 
+        responsive: [{
+                breakpoint: 768,
+                options: {
+                    chart: {
+                        width: '100%'
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+
+      }
+
+
+
+      var chart1 = new ApexCharts(document.querySelector("#pie-chart1"),pieOptions1);
+      chart1.render()
+
+
+      var subject_count_per_course = {{ subject_count_per_course | safe }};
+      var course_names = {{ course_names | safe }};
+      console.log(subject_count_per_course)
+      console.log(course_names)
+
+
+      var pieOptions2 = {
+        chart : {
+          type :"donut",
+          height :"400px"
+
+        },
+        title:{
+          text :"Number of Subjects per Course",
+          align: 'center',
+            margin: 20, 
+            offsetX: 0, 
+            offsetY: 0, 
+            style: {
+                fontSize: '20px', 
+                fontWeight: 'bold', 
+                color: '#333'
+            }
+        },
+        series : subject_count_per_course,
+        labels:course_names,
+        colors: generate_colors(course_names),
+        responsive: [{
+                breakpoint: 768,
+                options: {
+                    chart: {
+                        width: '100%'
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+
+      }
+
+      var chart2 = new ApexCharts(document.querySelector("#donut-chart2"),pieOptions2);
+      chart2.render()
+
+
+
+      var student_count_per_course = {{ student_count_per_course | safe }};
+  
+      var pieOptions3  = {
+        chart : {
+          type :"donut",
+          height :"400px"
+
+        },
+        title:{
+          text :"Number of Students per Course",
+          align: 'center',
+            margin: 20, 
+            offsetX: 0, 
+            offsetY: 0, 
+            style: {
+                fontSize: '20px', 
+                fontWeight: 'bold', 
+                color: '#333'
+            }
+        },
+        series : student_count_per_course,
+        labels:course_names,
+        colors: generate_colors(course_names),
+        responsive: [{
+                breakpoint: 768,
+                options: {
+                    chart: {
+                        width: '100%'
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+
+      }
+
+      var chart3 = new ApexCharts(document.querySelector("#donut-chart3"),pieOptions3);
+      chart3.render()
+
+
+  var student_count_per_subject = {{ student_count_per_subject | safe }};
+  var subject_names = {{ subject_names | safe }}
+  
+  var pieOptions4  = {
+    chart : {
+      type :"donut",
+      height :"400px"
+
+    },
+    title:{
+      text :"Number of Students per Subject",
+      align: 'center',
+        margin: 20, 
+        offsetX: 0, 
+        offsetY: 0, 
+        style: {
+            fontSize: '20px', 
+            fontWeight: 'bold', 
+            color: '#333'
+        }
+    },
+    series : student_count_per_subject,
+    labels: subject_names,
+    // colors: ['#20c997', '#f52f57'], 
+    colors: generate_colors(subject_names),
+    
+    responsive: [{
+            breakpoint: 768,
+            options: {
+                chart: {
+                    width: '100%'
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }]
+
+  }
+
+  var chart4 = new ApexCharts(document.querySelector("#pie-chart4"),pieOptions4);
+  chart4.render()
+
+
+
+
+  var attendence_absent_list_staff = {{ attendence_absent_list_staff | safe }};
+  var attendence_present_list_staff = {{ attendence_present_list_staff | safe }};
+  var staff_names = {{staff_names| safe}}
+
+
+
+
+
+  var barOptions5 = {
+                chart: {
+                    type: 'bar',
+                    height: '400px'
+                },
+                series: [{
+                    name: 'Leaves',
+                    data: attendence_absent_list_staff// Data for PRESENT and ABSENT
+                },{
+                  name: 'Attendance ',
+                    data: attendence_present_list_staff
+                }],
+                xaxis: {
+                    categories: staff_names
+                },
+                colors: ['#f52f57','#20c997'],
+                title: {
+                    text: 'Staff Leaves v/s Attendence',
+                    align: 'center',
+                    style: {
+                        fontSize: '24px',
+                        color: '#333'
+                    }
+                },
+                responsive: [{
+                    breakpoint: 768,
+                    options: {
+                        chart: {
+                            width: '100%'
+                        }
+                    }
+                }]
+            };
+
+            var chart5 = new ApexCharts(document.querySelector("#bar-chart5"), barOptions5);
+            chart5.render();
+
+
+            var attendence_absent_list_student = {{ attendence_absent_list_student | safe }};
+            var attendence_present_list_student = {{ attendence_present_list_student | safe }};
+            var student_names = {{student_names| safe}}
+
+
+
+            var barOptions6 = {
+                chart: {
+                    type: 'bar',
+                    height: '400px'
+                },
+                series: [{
+                    name: 'Leaves',
+                    data: attendence_absent_list_student// Data for PRESENT and ABSENT
+                },{
+                  name: 'Attendance ',
+                    data: attendence_present_list_student
+                }],
+                xaxis: {
+                    categories: student_names
+                },
+                colors: ['#f52f57','#20c997'],
+                title: {
+                    text: 'Student Leaves v/s Attendence',
+                    align: 'center',
+                    style: {
+                        fontSize: '24px',
+                        color: '#333'
+                    }
+                },
+                responsive: [{
+                    breakpoint: 768,
+                    options: {
+                        chart: {
+                            width: '100%'
+                        }
+                    }
+                }]
+            };
+
+            var chart6 = new ApexCharts(document.querySelector("#bar-chart6"), barOptions6);
+            chart6.render();
+
+
+
+    })
+
+    function generate_colors(labels) {
+    const baseColors = ['#20c997', '#f52f57', '#ffb84d', '#007bff', '#ff6f61', '#8e44ad', '#1abc9c'];
+
+    const colors = [];
+
+    for (let i = 0; i < labels.length; i++) {
+        colors.push(baseColors[i % baseColors.length]);
+    }
+
+    return colors;  
+}
+
+
+   
+  
+
+
+</script>
+
+
+
+{% endblock custom_js %}

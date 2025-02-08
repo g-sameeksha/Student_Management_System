@@ -1,0 +1,61 @@
+{% extends 'student_template/base_template.html' %}
+
+{% block title %}view_result{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center"><i class="fas fa-book"></i> Result of This academic year</h2>
+    <div>
+
+    </div>
+
+    <div class="my-2">
+            <div class="table-responsive ">
+               {% if student_result %}
+               <table class="table table-striped table-hover table-bordered text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>SUbject</th>
+                        <th>Assignment marks</th>
+                        <th>Exam Marks</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+             
+                <tbody>
+                    {% for result_i in student_result %}
+                    <tr >
+                        <td>{{ result_i.id }}</td>
+                        <td>{{ result_i.subject_id.subject_name }}</td>
+                        <td>{{ result_i.assignment_marks }}</td>
+                        <td>{{ result_i.exam_marks }}</td>
+                        <td>{% if result_i.exam_marks >= 35 %}
+                           <span class="bg-success text-white p-1"> PASS</span>
+
+                            {% else %}
+                            <span class="bg-danger text-white p-1"> PASS</span>
+                            {% endif %}
+                        </td>
+
+                       
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+               {% else %}
+               
+               <div class="bg-body-secondary text-center p-3 ">
+                <h6 >Results not published yet!</h6>
+
+               </div>
+               {% endif %}
+            </div>
+                 
+        </div>
+    </div>
+
+    
+   
+</div>
+{% endblock %}

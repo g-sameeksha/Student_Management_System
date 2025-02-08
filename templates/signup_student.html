@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5 d-flex flex-column justify-content-center align-items-center " style="min-height: 80vh;">
+    <!-- Title Section -->
+    <div class="mb-4 text-center">
+        <h1 style="font-weight: bold; color: var(--secondarycolor);">
+            STUDENT MANAGEMENT SYSTEM
+
+        </h1>
+    </div>
+
+    <!-- Login Card -->
+    <div class="card shadow-lg" style="width: 25rem; ">
+        <div class="card-header text-center text-white" style="background-color: var(--secondarycolor);">
+            <h2>STUDENT Registration</h2>
+            
+        </div>
+        <div class="card-body p-4">
+            {% if messages %}
+            <div class="mb-3">
+                {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div  class=" alert alert-danger text-center"  >
+                   
+                        {{ message }}
+                    </div>
+                {% elif message.tags == 'success' %}
+                <div  class=" alert alert-success text-center"  >
+            
+                    {{ message }}
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+            <form method="POST" action="{% url 'signup_student' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form.as_p }}
+
+                
+                <div class="form-group mb-3 position-relative">
+                    <label for="password" class="form-label">Confirm Password</label>
+                    <input 
+                        type="password" 
+                        id="check_password" 
+                        name="check_password" 
+                        class="form-control" 
+                        placeholder="Confirm Password..." 
+                        required>
+                    <span 
+                        class="position-absolute top-50 my-3 end-0 translate-middle-y me-3 cursor-pointer" 
+                        id="togglePassword">
+                        <i class="fas fa-eye" id="togglePasswordIcon"></i>
+                    </span>
+                </div>
+
+                
+               
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn text-white" style="background-color: var(--secondarycolor);">
+                        SignUp Student
+                    </button>
+                  
+                </div>
+              
+            </form>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-footer text-center">
+            <small>Already have Account ? <a href="{% url 'login_user' %}" class="text-primary">SignIn Student</a></small>
+        </div>
+
+
+      
+    </div>
+</div>
+
+
+
+{% endblock %}
+

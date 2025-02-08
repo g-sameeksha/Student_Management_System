@@ -19,19 +19,22 @@ class LoginCheckMiddleware(MiddlewareMixin):
             if user.user_type == "Staff":
                 if modulename == "studentapp.StaffViews":
                     pass
-                elif modulename == "studentapp.views"or modulename =="django.views.static":
+                elif modulename == "studentapp.views"or modulename =="django.views.static" :
                     pass
                 else:
                         return redirect("staff_home")
             if user.user_type == "Student":
                 if modulename == "studentapp.StudentViews":
                     pass
-                elif modulename == "studentapp.views" or modulename =="django.views.static":
+                elif modulename == "studentapp.views" or modulename =="django.views.static" :
                     pass
                 else:
                         return redirect("student_home")
         else:
-             if request.path == reverse("login_user"):
+             if request.path == reverse("login_user") or modulename == 'django.contrib.auth.views' or modulename == 'studentapp.views':
                   pass
              else:
                   return redirect("login_user")
+             
+
+

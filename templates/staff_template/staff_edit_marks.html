@@ -1,0 +1,173 @@
+{% extends 'staff_template/base_template.html' %}
+
+{% block title %}Edit Student Result{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4"><i class="fas fa-edit"></i> Edit Student Result</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <!-- Session Year Dropdown -->
+            <div class="form-group">
+                <label for="session_year">Session Year</label>
+                <select class="form-control" id="session_year">
+                    <option value="">Select Session Year</option>
+                    {% for session in session_years %}
+                        <option value="{{ session.id }}">{{ session.academic_start_year }} - {{ session.academic_end_year }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Subject Dropdown -->
+            <div class="form-group mt-3">
+                <label for="subject">Subject</label>
+                <select class="form-control" id="subject">
+                    <option value="">Select Subject</option>
+                    {% for subject in subjects %}
+                        <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Fetch Students Button -->
+            <button class="btn btn-primary w-100 mt-3" id="fetch_students">Fetch Students</button>
+        </div>
+    </div>
+
+    <!-- Students List Dropdown -->
+    <div class="mt-4" id="students_section" style="display:none;">
+        <h4>Select a Student</h4>
+        <select class="form-control" id="students_list">
+            
+        </select>
+    </div>
+
+    <!-- Student Result Display -->
+    <div class="mt-4" id="result_section" style="display:none;">
+        <h4>Student Result</h4>
+        <input type="number" class="form-control my-2" id="exam_marks" placeholder="Enter Exam Marks">
+        <input type="number" class="form-control my-2" id="assignment_marks" placeholder="Enter Assignment Marks">
+        <button class="btn btn-success w-100" id="update_result">Update Result</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+document.getElementById("fetch_students").addEventListener("click", function () {
+    let sessionYear = document.getElementById("session_year").value;
+    let subject = document.getElementById("subject").value;
+
+    if (!sessionYear || !subject) {
+        alert("Please select both Session Year and Subject.");
+        return;
+    }
+
+    let data = new FormData();
+    data.append("session_year", sessionYear);
+    data.append("subject", subject);
+
+    fetch("{% url 'get_students' %}", {
+        method: "POST",
+        body: data,
+    })
+    .then(response => response.json())
+    .then(data => {
+        displayStudents(JSON.parse(data));
+    })
+    .catch(error => {
+        console.error("Error fetching students:", error);
+        alert("Error fetching students");
+    });
+});
+
+function displayStudents(students) {
+    let studentSelect = document.getElementById("students_list");
+    studentSelect.innerHTML = ""
+    studentSelect.innerHTML = `<option value="">Select Student</option>`;
+
+    if (!students.length) {
+        studentSelect.innerHTML = "<p class='text-center text-danger'>No students found.</p>";
+        return;
+    }
+
+    students.forEach(student => {
+        let option = document.createElement("option");
+        option.value = student.id;
+        option.textContent = `${student.id} > ${student.name}`;
+        studentSelect.appendChild(option);
+    });
+
+    document.getElementById("students_section").style.display = "block";
+    document.getElementById("students_list").addEventListener("change", fetchStudentResult);
+}
+
+function fetchStudentResult() {
+    let studentId = document.getElementById("students_list").value;
+    let subject = document.getElementById("subject").value;
+
+    if (!studentId) {
+        return;
+    }
+
+    let data = new FormData();
+    data.append("student_id", studentId);
+    data.append("subject", subject);
+
+    fetch("{% url 'get_student_result' %}", {
+        method: "POST",
+        body: data,
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("exam_marks").value = data.exam_marks || "";
+        document.getElementById("assignment_marks").value = data.assignment_marks || "";
+        document.getElementById("result_section").style.display = "block";
+    })
+    .catch(error => {
+        console.error("Error fetching student result:", error);
+        alert("Error fetching student result");
+    });
+}
+
+document.getElementById("update_result").addEventListener("click", function () {
+    let studentId = document.getElementById("students_list").value;
+    let subject = document.getElementById("subject").value;
+    let examMarks = document.getElementById("exam_marks").value;
+    let assignmentMarks = document.getElementById("assignment_marks").value;
+
+    if (!studentId || !subject || !examMarks || !assignmentMarks) {
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    let data = new FormData();
+    data.append("student_id", studentId);
+    data.append("subject", subject);
+    data.append("exam_marks", examMarks);
+    data.append("assignment_marks", assignmentMarks);
+
+    fetch("{% url 'update_student_result' %}", {
+        method: "POST",
+        body: data,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Result updated successfully!");
+        } else {
+            alert("Failed to update result.");
+        }
+    })
+    .catch(error => {
+        console.error("Error updating student result:", error);
+        alert("Error updating student result");
+    });
+});
+
+
+
+
+</script>
+{% endblock %}

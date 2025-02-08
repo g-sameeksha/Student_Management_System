@@ -1,7 +1,7 @@
 <aside class="app-sidebar bg-body-secondary shadow vh-100" data-bs-theme="dark">
   <!-- Sidebar Brand -->
   <div class="sidebar-brand">
-    <a href="./index.html" class="brand-link">
+    <a href="{% url  'staff_profile' %}" class="brand-link">
       <img src="" alt="AdminLTE Logo" class="brand-image opacity-75 shadow">
       <span class="brand-text fw-light">Admin Panel</span>
     </a>
@@ -27,6 +27,7 @@
             <p>Staff take_attendence</p>
           </a>
         </li>
+
         <li class="nav-item"> 
           {% url 'staff_update_attendence' as staff_update_attendence %}
           <a href="{{staff_update_attendence}}"  class="nav-link {% if request.path == staff_update_attendence %} active  {% endif %}">
@@ -34,13 +35,39 @@
             <p>Staff update_attendence</p>
           </a>
         </li>
-  
 
-       
-
-       
-
+        <li class="nav-item"> 
+          {% url 'staff_apply_leave' as staff_apply_leave %}
+          <a href="{{staff_apply_leave}}"  class="nav-link {% if request.path == staff_apply_leave %} active  {% endif %}">
+            <i class="nav-icon bi bi-person-plus-fill"></i>
+            <p>Staff Apply leave</p>
+          </a>
+        </li>
+        <li class="nav-item"> 
+          {% url 'staff_feedback' as staff_feedback %}
+          <a href="{{staff_feedback}}"  class="nav-link {% if request.path == staff_feedback %} active  {% endif %}">
+            <i class="nav-icon bi bi-person-plus-fill"></i>
+            <p>Staff Feedback</p>
+          </a>
+        </li>
+        <li class="nav-item"> 
+          {% url 'staff_add_result' as staff_add_result %}
+          <a href="{{staff_add_result}}"  class="nav-link {% if request.path == staff_add_result %} active  {% endif %}">
+            <i class="nav-icon bi bi-person-plus-fill"></i>
+            <p> Add Student result</p>
+          </a>
+        </li>
+        
+        <li class="nav-item"> 
+          {% url 'staff_edit_result' as staff_edit_result %}
+          <a href="{{staff_edit_result}}"  class="nav-link {% if request.path == staff_edit_result %} active  {% endif %}">
+            <i class="nav-icon bi bi-person-plus-fill"></i>
+            <p>Edit Student result</p>
+          </a>
+        </li>
       </ul>
     </nav>
   </div>
 </aside>
+6Lek18oqAAAAAM5oFHj7FlMGNwuym6wG5eySLNwH
+6Lek18oqAAAAAGz2zmrn6aE-bOBb3INJNzqWMjH_

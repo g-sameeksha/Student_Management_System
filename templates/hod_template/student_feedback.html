@@ -1,0 +1,44 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block title %}Student Feedbacks{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center"><i class="fas fa-user-plus"></i> Student Feedbacks </h2>
+    <div class="my-2">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Session</th>
+                        <th>Message</th>
+                        <th>Reply</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for feedback in feedbacks %}
+                    <tr>
+                        <td>{{ feedback.id }}</td>
+                        <td>{{ feedback.student_id.id }}</td>
+                        <td>{{ feedback.student_id.admin.first_name }} {{ feedback.student_id.admin.last_name }}</td>
+                        <td>{{ feedback.student_id.session_year_id }}</td>
+                        <td>{{ feedback.feedback }}</td>
+                        <td>
+                            {% if feedback.feedback_reply == "" %}
+                            <!-- Link to open reply page with feedback details -->
+                            <a href="{% url 'reply_feedback' feedback.id feedback_type %}" class="btn btn-success">Reply</a>
+                            {% else %}
+                            {{ feedback.feedback_reply }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -14,7 +14,6 @@
 
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Toastify/1.12.0/Toastify.min.css" />
-    <!-- Add other necessary includes like CSS, JS, etc. -->
 
     <style>
         .active{
@@ -43,6 +42,143 @@
 <!-- Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src ="{% static 'custom/custom.js' %}"></script>
-    <!-- Include any footer or additional global content -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+            const emailField = document.getElementById('check_email');
+            const usernameField = document.getElementById('check_username'); 
+            const form = document.querySelector('form'); 
+
+            const emailFeedback = document.createElement('small');
+            emailFeedback.className = 'form-text';
+            emailField.parentNode.appendChild(emailFeedback);
+
+            const usernameFeedback = document.createElement('small');
+            usernameFeedback.className =  'form-text';
+            usernameField.parentNode.appendChild(usernameFeedback);
+
+            // Check email validity 
+            emailField.addEventListener('keyup', () => {
+                const email = emailField.value.trim();
+
+                if (email === '') {
+
+                    emailFeedback.textContent = '';
+                    emailFeedback.className = 'form-text' ;
+                    emailField.classList.remove('is-valid', 'is-invalid');
+                    return;
+                }
+
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(email)) {
+
+                    emailFeedback.textContent = 'Please enter a valid email address.';
+                    emailFeedback.className = 'form-text text-danger';
+                    emailField.classList.remove('is-valid') ;
+                    emailField.classList.add('is-invalid');
+                    return;
+                }
+
+                var data = new FormData();
+                data.append("email", email);
+
+                fetch("{% url 'check_email' %}" , {
+                    method: "POST",
+                    body: data,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.available) {
+
+                            emailFeedback.textContent = data.message;
+                            emailFeedback.className = 'form-text text-success';
+                            emailField.classList.remove('is-invalid') ;
+                            emailField.classList.add('is-valid');
+                        } else {
+
+                            emailFeedback.textContent = data.message;
+                            emailFeedback.className = 'form-text text-danger';
+                            emailField.classList.remove('is-valid');
+                            emailField.classList.add('is-invalid') ;
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+
+            // Check username validity 
+            usernameField.addEventListener('keyup', () => {
+                const username = usernameField.value.trim();
+
+                if (username === '') {
+                    usernameFeedback.textContent = '';
+                    usernameFeedback.className = 'form-text';
+                    usernameField.classList.remove('is-valid', 'is-invalid');
+                    return;
+                }
+
+                const usernameRegex = /^[a-zA-Z0-9_]+$/;
+                if (!usernameRegex.test(username)) {
+                    
+                    usernameFeedback.textContent = 'Username can only contain letters, numbers, and underscores.';
+                    usernameFeedback.className = 'form-text text-danger';
+                    usernameField.classList.remove('is-valid');
+                    usernameField.classList.add('is-invalid');
+                    return;
+                }
+
+                var data = new FormData();
+                data.append("username", username);
+
+                fetch("{% url 'check_username' %}", {
+                    method: "POST",
+                    body: data,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.available) {
+                            usernameFeedback.textContent = data.message;
+                            usernameFeedback.className = 'form-text text-success';
+                            usernameField.classList.remove('is-invalid');
+                            usernameField.classList.add('is-valid');
+                        } else {
+                            usernameFeedback.textContent = data.message;
+                            usernameFeedback.className = 'form-text text-danger';
+                            usernameField.classList.remove('is-valid');
+                            usernameField.classList.add('is-invalid');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+
+            // Prevent form submit until email nd username are valid nd available
+            form.addEventListener('submit', (event) => {
+                const email = emailField.value.trim();
+                const username = usernameField.value.trim();
+
+                if (email === '' || emailField.classList.contains('is-invalid') || username === '' || usernameField.classList.contains('is-invalid')) {
+                    event.preventDefault();  
+                    alert("Please ensure both email and username are valid and available.");
+                }
+            });
+            });
+
+
+</script>
+
+{% block custom_js %}
+{% endblock custom_js %}
+     
+
+
+
 </body>
 </html>

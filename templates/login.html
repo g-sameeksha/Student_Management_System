@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container my-5 d-flex flex-column justify-content-center align-items-center" style="min-height: 80vh;">
+<div class="container my-5 d-flex flex-column justify-content-center align-items-center " style="min-height: 80vh;">
     <!-- Title Section -->
     <div class="mb-4 text-center">
         <h1 style="font-weight: bold; color: var(--secondarycolor);">
@@ -11,7 +11,7 @@
     </div>
 
     <!-- Login Card -->
-    <div class="card shadow-lg" style="width: 25rem;">
+    <div class="card shadow-lg" style="width: 25rem; ">
         <div class="card-header text-center text-white" style="background-color: var(--secondarycolor);">
             <h2>Login</h2>
             
@@ -20,10 +20,22 @@
             {% if messages %}
             <div class="mb-3">
                 {% for message in messages %}
-                    <div class="alert alert-danger">{{ message }}</div>
+                {% if message.tags == 'error' %}
+                    <div  class=" alert alert-danger text-center"  >
+                   
+                        {{ message }}
+                    </div>
+                {% elif message.tags == 'success' %}
+                <div  class=" alert alert-success text-center"  >
+            
+                    {{ message }}
+                </div>
+                {% endif %}
                 {% endfor %}
             </div>
         {% endif %}
+
+        
             <form method="POST">
                 {% csrf_token %}
                 
@@ -64,19 +76,36 @@
                     </select>
                    
                 </div>
+                <div class="input-group mb-3 ">
+                    <div  class="g-recaptcha" data-sitekey="6Lek18oqAAAAAM5oFHj7FlMGNwuym6wG5eySLNwH"></div>
+
+                </div>
+                <br>
 
                 <!-- Submit Button -->
                 <div class="d-grid">
                     <button type="submit" class="btn text-white" style="background-color: var(--secondarycolor);">
                         Submit
                     </button>
+                   <div class=" my-2 text-center">Forgot Password?
+                    <a href ="{% url 'password_reset' %}">
+                        Reset Password
+                    </a>
+                   </div>
                 </div>
+              
             </form>
         </div>
 
         <!-- Card Footer -->
         <div class="card-footer text-center">
-            <small>Don't have an account? <a href="/register" class="text-primary">Sign up</a></small>
+            <small>Don't have an account? 
+                <br><a href="{% url 'signup_admin' %}" class="text-primary">Sign up as Admin</a>
+                <br>
+                <a href="{% url 'signup_staff' %}" class="text-primary">Sign up as Staff</a>
+                <br>
+                <a href="{% url 'signup_student' %}" class="text-primary">Sign up as Student</a>
+            </small>
         </div>
 
 

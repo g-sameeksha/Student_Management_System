@@ -1,0 +1,77 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% block title %}Leave Reports{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Leave Reports</h2>
+    <div class="my-2">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Leave Date</th>
+                        <td>
+                            {% if user_type == 'student' %}
+                               Student id  <!-- Display Student ID -->
+                            {% else %}
+                                Staff id <!-- Display Staff ID if it's staff leave -->
+                            {% endif %}
+                        </td>
+
+                        <th>Leave Message</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for leave_report in leave_reports %}
+                    <tr>
+                        <td>{{ leave_report.id }}</td>
+                        <td>
+                            {% if user_type == 'student' %}
+                                {{ leave_report.student_id.id }}  <!-- Display Student ID -->
+                            {% else %}
+                                {{ leave_report.staff_id.id }}  <!-- Display Staff ID if it's staff leave -->
+                            {% endif %}
+                        </td>
+                        <td>{{ leave_report.leave_date }}</td>
+                        <td>{{ leave_report.leave_message }}</td>
+                        <td>
+                            {% if leave_report.leave_status == 0 %}
+                                Pending
+                            {% elif leave_report.leave_status == 1 %}
+                                Approved
+                            {% else %}
+                                Rejected
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if leave_report.leave_status == 0 %}
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="leave_report_id" value="{{ leave_report.id }}">
+                                <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+                            </form>
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="leave_report_id" value="{{ leave_report.id }}">
+                                <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
+                            </form>
+                            {% else %}
+                            <p>--</p>
+                            {% endif %}
+                        </td>
+                        <td>{{ leave_report.created_at }}</td>
+                        <td>{{ leave_report.updated_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

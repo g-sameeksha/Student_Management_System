@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,11 +84,15 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
         "ENGINE": 'django.db.backends.mysql',
-        'NAME': 'student_management_system',
-        'USER': 'student_management_system',
-        'PASSWORD':'student_management_password',
+        # 'NAME': 'student_management_system',
+        'NAME' : os.getenv("NAME"),
+        # 'USER': 'student_management_system',
+        # 'PASSWORD':'student_management_password',
+        'USER' :os.getenv("USER"),
+        'PASSWORD' :os.getenv("PASSWORD"),
         'HOST':'localhost',
         "PORT":'3306'
+       
     }
 }
 
@@ -137,3 +144,15 @@ AUTH_USER_MODEL = "studentapp.CustomUser"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+# EMAIL_FILE_PATH = os.path.join(BASE_DIR,"sent_mails")
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD =  os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS =True
+DEFAULT_FROM_EMAIL = "Student Management System <test85482480@gmail.com>"

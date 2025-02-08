@@ -86,7 +86,9 @@
           
           <p>
             <label for="id_profile_pic">Profile pic:</label>
-            <img src="{{student.profile_pic }}" class=" border rounded" style="width:60px;height: 60px; object-fit: cover;">
+            {% if student.profile_pic %}
+            <img src="{{ student.profile_pic.url }}" alt="Profile Picture" class="img-fluid rounded-circle" width="150" height="150">   
+{% endif %}  
             <input type="file" value = {{student.profile_pic}} name="profile_pic" class="form-control" required id="id_profile_pic">
             
             

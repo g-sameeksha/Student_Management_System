@@ -1,17 +1,90 @@
 from django.shortcuts import render,redirect
 from .forms import StaffForm,CourseForm,StudentForm
 from django.contrib import messages
-from .models import Staff,Course,SessionYear,Subject,Student,AdminHOD,Attendence,AttendenceReport
+from .models import CustomUser, Staff,Course,SessionYear,Subject,Student,AdminHOD,Attendence,AttendenceReport,LeaveReportStaff,FeedbackStaff,StudentResult
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 # from django.contrib.sessions import serializers
 from django.core import serializers
 import json
 from django.db import transaction
+from django.http import HttpResponseRedirect ,HttpResponse
+
 
 
 def staff_home(request):
-    return render(request,"staff_template/staff_home.html")
+    staff_id_curr = Staff.objects.get(admin =request.user.id)
+    subjects = Subject.objects.filter(staff_id = staff_id_curr)
+    subject_count = subjects.count()
+
+    course_id_list = []
+    for subject in subjects:
+        course = Course.objects.get(id=subject.course_id.id)
+        course_id_list.append(course.id)
+    final_course_list = set(course_id_list)
+    students_count = Student.objects.filter(course_id__in = final_course_list).count()
+    print(students_count)
+  
+
+    leave_count = LeaveReportStaff.objects.filter(staff_id = staff_id_curr,leave_status =1).count()
+    attendence_taken_count = Attendence.objects.filter(subject_id__in = subjects).count()
+
+    subject_list  = []
+    attendence_list = []
+    for subject in subjects:
+        subject_list.append(subject.subject_name)
+        attendence_count = Attendence.objects.filter(subject_id = subject.id).count()
+        attendence_list.append(attendence_count)
+
+
+    print(subject_list)
+    print(attendence_list)
+
+
+    student_attendence = Student.objects.filter(course_id__in = final_course_list)
+
+    student_list =[]
+    student_list_attendence_present = []
+    student_list_attendence_absent = []
+
+    for student in student_attendence:
+        attendence_present_count = AttendenceReport.objects.filter(status =True,student_id= student.id).count()
+        attendence_absent_count = AttendenceReport.objects.filter(status =False,student_id = student.id).count()
+        student_list_attendence_present.append(attendence_present_count)
+        student_list_attendence_absent.append(attendence_absent_count)
+        student_list.append(student.admin.username)
+
+
+
+
+    return render(request,"staff_template/staff_home.html",
+                  {"subject_count":subject_count ,"leave_count":leave_count,"students_count" :students_count,"attendence_taken_count":attendence_taken_count,"subject_list":subject_list,"attendence_list":attendence_list,"student_list":student_list,"student_list_attendence_absent":student_list_attendence_absent,"student_list_attendence_present":student_list_attendence_present})
+
+def staff_profile(request):
+    custom_user = CustomUser.objects.get(id=request.user.id)
+    staff_obj = Staff.objects.get(admin= custom_user.id)
+    print(custom_user.first_name)
+   
+    if request.method  == "POST":
+        first_name_inp = request.POST.get("first_name")
+        address_inp = request.POST.get("address")
+        last_name_inp = request.POST.get("last_name")
+
+        try:
+            custom_user.first_name = first_name_inp
+            custom_user.last_name= last_name_inp
+            custom_user.save()
+            staff_obj = Staff.objects.get(admin= custom_user.id)
+            staff_obj.address = address_inp
+            staff_obj.save()
+            messages.success(request, 'Profile data updated successfully!')
+            return redirect("staff_profile")
+        except Exception as e:
+            messages.error(request, f'Failed to update Profile')
+            return redirect("staff_profile")
+
+    return render(request,"staff_template/staff_profile.html",{"user":custom_user,"staff":staff_obj})
+
 
 def staff_take_attendence(request):
     staff = Staff.objects.get(admin =request.user)
@@ -204,3 +277,135 @@ def update_attendance_data(request):
         #     return JsonResponse({"error": str(e)}, status=500)
 
     return JsonResponse({"error": "Invalid request method."}, status=405)
+
+
+
+def staff_apply_leave(request):
+    if request.method == "POST":
+        leave_date_inp = request.POST.get("leave_date")
+        leave_msg_inp = request.POST.get("leave_reason")
+
+        staff_obj = Staff.objects.get(admin = request.user.id)
+        try :
+            leave_obj = LeaveReportStaff(
+            staff_id = staff_obj,
+            leave_date = leave_date_inp,
+            leave_message = leave_msg_inp,
+            leave_status =0
+        )
+            leave_obj.save()
+            messages.success(request,"succeessfully applied for leave.Admin need to approve")
+            return redirect('staff_apply_leave')
+        except Exception as e:
+            messages.error(request,"failed to apply for leave")
+            return redirect('staff_apply_leave')
+    
+    staff_obj = Staff.objects.get(admin = request.user.id)
+    leave_data = LeaveReportStaff.objects.filter(staff_id = staff_obj)
+
+            
+    return render(request,"staff_template/staff_apply_leave.html",{"leave_data":leave_data})
+
+def staff_feedback(request):
+    if request.method == "POST":
+        feedback_inp = request.POST.get("feedback_msg")
+
+        staff_obj = Staff.objects.get(admin = request.user.id)
+        try :
+            feedback_obj = FeedbackStaff(
+            staff_id = staff_obj,
+            feedback = feedback_inp,
+            feedback_reply = ""
+        )
+            feedback_obj.save()
+            messages.success(request,"succeessfully submitted your feedback")
+            return redirect('staff_feedback')
+        except Exception as e:
+            messages.error(request,"failed to submit your feedback")
+            return redirect('staff_feedback')
+    
+    staff_obj = Staff.objects.get(admin = request.user.id)
+    feedback_data = FeedbackStaff.objects.filter(staff_id = staff_obj)
+
+    return render(request,"staff_template/staff_feedback.html",{"feedback_data":feedback_data})
+
+def staff_add_result(request):
+    staff_id = Staff.objects.get(admin=request.user.id)
+    subjects = Subject.objects.filter(staff_id = staff_id)
+    session_years = SessionYear.objects.all()
+    return render(request,"staff_template/staff_add_result.html",{"subjects":subjects,"session_years":session_years})
+
+def staff_save_marks(request):
+    if request.method == "POST":
+        student_id= request.POST.get("student_id")
+        exam_marks = request.POST.get("exam_marks")
+        assignment_marks = request.POST.get("assignment_marks")
+        subject_id = request.POST.get("subject_id")
+
+        try:
+            student_obj = Student.objects.get(admin=student_id)
+            subject_obj = Subject.objects.get(id=subject_id)
+
+            newStudentResult, created = StudentResult.objects.update_or_create(
+                student_id=student_obj,
+                subject_id=subject_obj,
+                defaults={
+                    "exam_marks": exam_marks,
+                    "assignment_marks": assignment_marks
+                }
+            )
+            return JsonResponse({ "status": "success",
+                "message": "Marks submitted successfully.",})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": f"Error saving marks: {str(e)}"}, status=500)
+
+
+        
+    staff_id = Staff.objects.get(admin=request.user.id)
+    subjects = Subject.objects.filter(staff_id = staff_id)
+    session_years = SessionYear.objects.all()
+    return render(request,"staff_template/staff_add_result.html",{"subjects":subjects,"session_years":session_years})
+
+
+def staff_edit_result(request):
+    staff_id = Staff.objects.get(admin=request.user.id)
+    subjects = Subject.objects.filter(staff_id = staff_id)
+    session_years = SessionYear.objects.all()
+    return render(request,"staff_template/staff_edit_marks.html",{"subjects":subjects,"session_years":session_years})
+    
+
+@csrf_exempt
+def get_student_result(request):
+    student_id = request.POST.get("student_id")
+    subject_id = request.POST.get("subject")
+    student_obj = Student.objects.get(admin=student_id)
+
+    try:
+        result = StudentResult.objects.get(student_id=student_obj, subject_id=subject_id)
+        return JsonResponse({
+            "exam_marks": result.exam_marks,
+            "assignment_marks": result.assignment_marks
+        })
+    except StudentResult.DoesNotExist:
+        return JsonResponse({"exam_marks": "", "assignment_marks": ""})
+
+@csrf_exempt  
+def update_student_result(request):
+    student_id = request.POST.get("student_id")
+    subject_id = request.POST.get("subject")
+    exam_marks = request.POST.get("exam_marks")
+    assignment_marks = request.POST.get("assignment_marks")
+
+    student_obj = Student.objects.get(admin=student_id)
+    subject_obj = Subject.objects.get(id=subject_id)
+
+
+    try:
+        result, created = StudentResult.objects.update_or_create(
+            student_id=student_obj,
+            subject_id=subject_obj,
+            defaults={"exam_marks": exam_marks, "assignment_marks": assignment_marks}
+        )
+        return JsonResponse({"success": True})
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)})

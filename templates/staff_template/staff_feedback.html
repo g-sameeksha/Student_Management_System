@@ -1,0 +1,92 @@
+{% extends 'staff_template/base_template.html' %}
+
+{% block title %}Feedback{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center"><i class="fas fa-book"></i>Give feebdack 
+    <p>For any queries and improvement of the system</p></h2>
+    
+   
+    {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-body">
+            <form action="{% url 'staff_feedback' %}" method="POST">
+                {% csrf_token %}
+                
+                <div class="form-group my-3">
+                    <label>Feedback Message</label>
+                    <textarea class="form-control" row="3" name="feedback_msg" id ="feedback_msg"></textarea>
+                </div>
+               
+                
+                
+                <button type="submit" class="btn btn-primary w-100" id = "send_feedback"> Send feedback</button>
+                
+
+
+            </form>
+       
+        </div>
+       
+    </div>
+
+    <br>
+    <hr>
+    <br>
+    <div class="card my-2">
+        <div class="card-header" id ="leave_list">
+             FeedBack Records:
+        </div>
+        {% if feedback_data %}  
+        <div class="card-body" id ="leave_list">
+           
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>FeedBack message</th>
+                            <th>FeedBack Reply</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        {% for feedback in feedback_data %}
+                        <tr>
+                            <td>{{ feedback.id }}</td>
+                            <td>
+                               
+                                {{feedback.created_at}}
+                            </td>
+                            <td>{{ feedback.feedback }}</td>
+                            
+                            <td>{{ feedback.feedback_reply }} </td>
+                            
+                           
+                        </tr>
+        
+                          
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+             
+        </div>
+        {% else %}
+        <div>No records found</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

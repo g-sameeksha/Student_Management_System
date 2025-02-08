@@ -32,11 +32,19 @@ class LoginForm(forms.Form):
 User = get_user_model()
 
 class StaffForm(forms.ModelForm):
-    email = forms.EmailField(max_length=255, required=True)
-    password = forms.CharField(widget=forms.PasswordInput, required=True)
-    username = forms.CharField(max_length=255, required=True)
-    first_name = forms.CharField(max_length=255, required=True)
-    last_name = forms.CharField(max_length=255, required=True)
+    email = forms.EmailField(max_length=255, required=True,widget=forms.EmailInput(attrs={
+            'class': 'form-control', 
+            'id': 'check_email'
+        }))
+    
+    username = forms.CharField(max_length=255, required=True , widget=forms.TextInput(attrs={
+            'class': 'form-control', 
+            'id': 'check_username',
+        }))
+    
+    first_name = forms.CharField(max_length=255, required=True,widget=forms.TextInput(attrs={'class': 'form-control', }))
+    last_name = forms.CharField(max_length=255, required=True,widget=forms.TextInput(attrs={'class': 'form-control', }))
+    password = forms.CharField(required=True,widget=forms.PasswordInput(attrs={'class': 'form-control','id':'password' }))
 
     class Meta:
         model = Staff
@@ -99,21 +107,30 @@ class CourseForm(forms.ModelForm):
 
 class StudentForm(forms.ModelForm):
     # Fields for the CustomUser model (admin)
-    username = forms.CharField(max_length=255, required=True)
-    email = forms.EmailField(max_length=255, required=True)
-    password = forms.CharField(widget=forms.PasswordInput, required=True)
-    first_name = forms.CharField(max_length=255, required=True)
-    last_name = forms.CharField(max_length=255, required=True)
+    username = forms.CharField(max_length=255, required=True,widget=forms.TextInput(attrs={
+            'class': 'form-control', 
+            'id': 'check_username',
+        }))
+    email = forms.EmailField(max_length=255, required=True,widget=forms.EmailInput(attrs={
+            'class': 'form-control', 
+            'id': 'check_email'
+        }))
+ 
+    first_name = forms.CharField(max_length=255, required=True,widget=forms.TextInput(attrs={'class': 'form-control', }))
+    last_name = forms.CharField(max_length=255, required=True,widget=forms.TextInput(attrs={'class': 'form-control', }))
+    password = forms.CharField(required=True,widget=forms.PasswordInput(attrs={'class': 'form-control','id':'password' }))
    
 
     class Meta:
         model = Student
         fields = ['gender', 'profile_pic', 'address', 'course_id',"session_year_id"]
         widgets = {
-            'gender': forms.Select(attrs={'class': 'form-control'}),
+            'gender': forms.Select(attrs={'class': 'form-select'}),
             'profile_pic': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'course_id': forms.Select(attrs={'class': 'form-control'}),
+            'course_id': forms.Select(attrs={'class': 'form-select'}),
+            'session_year_id': forms.Select(attrs={'class': 'form-select'}),  
+
         }
 
     def save(self, commit=True):

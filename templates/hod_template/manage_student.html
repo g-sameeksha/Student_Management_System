@@ -1,10 +1,10 @@
 {% extends 'hod_template/base_template.html' %}
 
-{% block title %}All Staff{% endblock %}
+{% block title %}All Students{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4">Staff Details</h2>
+    <h2 class="mb-4">Student Details</h2>
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="thead-dark">
@@ -35,7 +35,10 @@
                     <td>{{student.gender}}</td>
                     <td>{{student.admin.date_joined}}</td>
                     <td>{{ student.address }}</td>
-                    <td>            <img src="{{student.profile_pic }}" class=" border rounded" style="width:60px;height: 60px; object-fit: cover;">
+                    <td>   
+                        {% if student.profile_pic %}
+                                        <img src="{{ student.profile_pic.url }}" alt="Profile Picture" class="img-fluid rounded-circle" width="150" height="150">   
+                        {% endif %}         
                     </td>
                     <td>
                         {% if student.course_id %}
