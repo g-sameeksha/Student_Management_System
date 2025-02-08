@@ -1,0 +1,7 @@
+django
+os
+pathlib
+dotenv
+requests
+json
+datetime
